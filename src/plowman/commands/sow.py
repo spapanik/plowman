@@ -4,6 +4,8 @@ import filecmp
 import shutil
 from typing import TYPE_CHECKING
 
+from pyutilkit.term import SGRString
+
 from plowman.commands.base import BaseCommand
 from plowman.lib.constants import HOME
 
@@ -12,11 +14,12 @@ if TYPE_CHECKING:
 
 
 class SowCommand(BaseCommand):
-    __slots__ = ("verbosity",)
+    __slots__ = ("dry_run", "verbosity")
 
-    def __init__(self, verbosity: int) -> None:
+    def __init__(self, verbosity: int, *, dry_run: bool) -> None:
         super().__init__()
         self.verbosity = verbosity
+        self.dry_run = dry_run
 
     def sow_granary(self, granary_path: Path) -> None:
         for file in granary_path.rglob("*"):
@@ -26,6 +29,9 @@ class SowCommand(BaseCommand):
             farm.mkdir(exist_ok=True, parents=True)
             target = farm.joinpath(file.name)
             if target.exists() and filecmp.cmp(file, target, shallow=False):
+                continue
+            if self.dry_run:
+                SGRString(f"Would copy {file} to {target}", prefix="☑️ ").print()
                 continue
 
             target.unlink(missing_ok=True)

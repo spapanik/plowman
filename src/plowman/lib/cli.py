@@ -12,6 +12,7 @@ sys.tracebacklimit = 0
 class PlowmanArgs:
     subcommand: Literal["sow"]
     verbosity: int
+    dry_run: bool
 
 
 def parse_args() -> PlowmanArgs:
@@ -33,6 +34,12 @@ def parse_args() -> PlowmanArgs:
         dest="verbosity",
         help="increase the level of verbosity",
     )
+    parent_parser.add_argument(
+        "-n",
+        "--dry-run",
+        action="store_true",
+        help="perform a trial run with no changes made",
+    )
 
     subparsers = parser.add_subparsers(dest="subcommand", required=True)
     subparsers.add_parser("sow", parents=[parent_parser])
@@ -41,4 +48,6 @@ def parse_args() -> PlowmanArgs:
     if args.verbosity > 0:
         sys.tracebacklimit = 1000
 
-    return PlowmanArgs(subcommand=args.subcommand, verbosity=args.verbosity)
+    return PlowmanArgs(
+        subcommand=args.subcommand, verbosity=args.verbosity, dry_run=args.dry_run
+    )

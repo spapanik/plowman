@@ -6,4 +6,4 @@ def main() -> None:
     args = parse_args()
     match args.subcommand:
         case "sow":
-            SowCommand(verbosity=args.verbosity).run()
+            SowCommand(verbosity=args.verbosity, dry_run=args.dry_run).run()
