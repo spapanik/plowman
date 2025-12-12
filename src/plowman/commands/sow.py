@@ -21,21 +21,32 @@ class SowCommand(BaseCommand):
         self.verbosity = verbosity
         self.dry_run = dry_run
 
+    def _get_crop_path(self, granary: Path, seed: Path) -> Path:
+        farm = HOME.joinpath(seed.relative_to(granary)).parent
+        farm.mkdir(exist_ok=True, parents=True)
+        return farm.joinpath(seed.name)
+
+    def _should_skip(self, seed: Path, crop: Path) -> bool:
+        if not crop.exists():
+            return False
+        return filecmp.cmp(seed, crop, shallow=False)
+
+    def _plant_crop(self, seed: Path, crop: Path) -> None:
+        crop.unlink(missing_ok=True)
+        shutil.copy2(seed, crop)
+
     def sow_granary(self, granary_path: Path) -> None:
-        for file in granary_path.rglob("*"):
-            if file.is_dir():
+        for seed in granary_path.rglob("*"):
+            if seed.is_dir():
                 continue
-            farm = HOME.joinpath(file.relative_to(granary_path)).parent
-            farm.mkdir(exist_ok=True, parents=True)
-            target = farm.joinpath(file.name)
-            if target.exists() and filecmp.cmp(file, target, shallow=False):
+            crop = self._get_crop_path(granary_path, seed)
+            if self._should_skip(seed, crop):
                 continue
             if self.dry_run:
-                SGRString(f"Would copy {file} to {target}", prefix="☑️ ").print()
+                SGRString(f"Would copy {seed} to {crop}", prefix="☑️ ").print()
                 continue
 
-            target.unlink(missing_ok=True)
-            shutil.copy2(file, target)
+            self._plant_crop(seed, crop)
 
     def run(self) -> None:
         for path, granaries in self.config.items():
