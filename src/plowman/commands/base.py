@@ -15,10 +15,13 @@ if TYPE_CHECKING:
 
 
 class BaseCommand:
-    __slots__ = ("config", "granary_config")
+    __slots__ = ("allow_symlinks", "config", "granary_config")
 
     def __init__(self) -> None:
         self.config = self._get_config()
+        self.allow_symlinks = ConfigParser([CONFIG_PATH]).data.get(
+            "allow_symlinks", False
+        )
 
     def _parse_config(
         self, path: Path, config: PlowmanConfig
@@ -42,7 +45,7 @@ class BaseCommand:
     def _get_config(self) -> list[ParsedConfig]:
         if not CONFIG_PATH.exists():
             raise MissingConfigError
-        config_path = ConfigParser([CONFIG_PATH]).data["config"]
+        config_path = ConfigParser([CONFIG_PATH]).data["granaries"]
         return [
             granary_config
             for path, config in config_path.items()

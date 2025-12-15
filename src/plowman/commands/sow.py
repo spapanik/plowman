@@ -52,6 +52,8 @@ class SowCommand(BaseCommand):
     ) -> bool:
         if not crop.exists():
             return False
+        if not self.allow_symlinks and crop.is_symlink():
+            return False
         seed_hash = self._get_content_hash(seed, variables, is_template=is_template)
         crop_hash = self._get_content_hash(crop, variables, is_template=False)
         return seed_hash == crop_hash
