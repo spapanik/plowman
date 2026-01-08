@@ -87,6 +87,8 @@ class SowCommand(BaseCommand):
             if self.dry_run:
                 SGRString(f"Would copy {seed} to {crop}", prefix="☑️ ").print()
                 continue
+            if self.verbosity > 0:
+                SGRString(f"Copying {seed} to {crop}", prefix="☑️ ").print()
 
             self._plant_crop(seed, crop, variables, is_template=is_template)
 
@@ -104,6 +106,8 @@ class SowCommand(BaseCommand):
             if self.dry_run:
                 SGRString(f"Would delete {crop}", prefix="🧹 ").print()
                 continue
+            if self.verbosity > 0:
+                SGRString(f"Deleting {crop}", prefix="🧹 ").print()
             crop.unlink(missing_ok=True)
             self.estate.remove(crop)
         if not self.dry_run:
