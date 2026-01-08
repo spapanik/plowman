@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+from difflib import unified_diff
 from hashlib import sha256
 from typing import TYPE_CHECKING
+from unittest import case
 
 from jinja2 import StrictUndefined, Template
-from pyutilkit.term import SGRString
+from pyutilkit.term import SGRCodes, SGRString
 
 from plowman.commands.base import BaseCommand
 from plowman.lib.constants import HOME
@@ -67,6 +69,33 @@ class SowCommand(BaseCommand):
         content = self._get_content(seed, variables, is_template=is_template)
         crop.write_text(content)
 
+    def show_diff(
+        self, seed: Path, crop: Path, variables: dict[str, str], *, is_template: bool
+    ) -> None:
+        seed_content = self._get_content(seed, variables, is_template=is_template)
+        crop_content = self._get_content(crop, variables, is_template=False)
+        diff = unified_diff(
+            crop_content.splitlines(keepends=True),
+            seed_content.splitlines(keepends=True),
+            fromfile=str(seed),
+            tofile=str(crop),
+        )
+        prefix = " " * 4
+        for line in diff:
+            if line.startswith("@@"):
+                SGRString(line, prefix=prefix, params=[SGRCodes.CYAN]).print(end="")
+            elif line.startswith(("+++", "---")):
+                SGRString(
+                    line, prefix=prefix, params=[SGRCodes.YELLOW, SGRCodes.BOLD]
+                ).print(end="")
+                continue
+            elif line.startswith("+"):
+                SGRString(line, prefix=prefix, params=[SGRCodes.GREEN]).print(end="")
+            elif line.startswith("-"):
+                SGRString(line, prefix=prefix, params=[SGRCodes.RED]).print(end="")
+            else:
+                SGRString(line, prefix=prefix).print(end="")
+
     def sow_granary(
         self,
         granary_path: Path,
@@ -86,9 +115,13 @@ class SowCommand(BaseCommand):
                 continue
             if self.dry_run:
                 SGRString(f"Would copy {seed} to {crop}", prefix="☑️ ").print()
+                if self.verbosity:
+                    self.show_diff(seed, crop, variables, is_template=is_template)
                 continue
-            if self.verbosity > 0:
+            if self.verbosity:
                 SGRString(f"Copying {seed} to {crop}", prefix="☑️ ").print()
+                if self.verbosity > 1:
+                    self.show_diff(seed, crop, variables, is_template=is_template)
 
             self._plant_crop(seed, crop, variables, is_template=is_template)
 
@@ -106,7 +139,7 @@ class SowCommand(BaseCommand):
             if self.dry_run:
                 SGRString(f"Would delete {crop}", prefix="🧹 ").print()
                 continue
-            if self.verbosity > 0:
+            if self.verbosity:
                 SGRString(f"Deleting {crop}", prefix="🧹 ").print()
             crop.unlink(missing_ok=True)
             self.estate.remove(crop)
