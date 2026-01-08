@@ -28,6 +28,7 @@ class BaseCommand:
     ) -> Iterator[ParsedConfig]:
         variables = config.get("variables", {})
         path_config = path.joinpath(".plowman", "plowman.yml")
+        estate = path.joinpath(".plowman", "estate.yml")
         data = ConfigParser([path_config]).data if path_config.exists() else {}
         for granary_name in config.get("granaries", []):
             granary_path = path.joinpath(granary_name)
@@ -35,6 +36,7 @@ class BaseCommand:
                 raise MissingGranaryError(granary_path)
             templates = data.get(granary_name, {}).get("templates", [])
             yield {
+                "estate": estate,
                 "variables": variables,
                 "granary": granary_path,
                 "templates": {

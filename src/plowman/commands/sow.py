@@ -8,18 +8,20 @@ from pyutilkit.term import SGRString
 
 from plowman.commands.base import BaseCommand
 from plowman.lib.constants import HOME
+from plowman.lib.estate import Estate
 
 if TYPE_CHECKING:
     from pathlib import Path
 
 
 class SowCommand(BaseCommand):
-    __slots__ = ("dry_run", "verbosity")
+    __slots__ = ("dry_run", "estate", "verbosity")
 
     def __init__(self, verbosity: int, *, dry_run: bool) -> None:
         super().__init__()
         self.verbosity = verbosity
         self.dry_run = dry_run
+        self.estate = Estate(self.config)
 
     def _get_crop_path(self, granary: Path, seed: Path, *, is_template: bool) -> Path:
         farm = HOME.joinpath(seed.relative_to(granary)).parent
@@ -66,13 +68,20 @@ class SowCommand(BaseCommand):
         crop.write_text(content)
 
     def sow_granary(
-        self, granary_path: Path, templates: set[Path], variables: dict[str, str]
+        self,
+        granary_path: Path,
+        templates: set[Path],
+        variables: dict[str, str],
+        estate_path: Path,
+        pending_removal: set[Path],
     ) -> None:
         for seed in granary_path.rglob("*"):
             if seed.is_dir():
                 continue
             is_template = seed in templates
             crop = self._get_crop_path(granary_path, seed, is_template=is_template)
+            pending_removal.discard(crop)
+            self.estate.add(crop, estate_path)
             if self._should_skip(seed, crop, variables, is_template=is_template):
                 continue
             if self.dry_run:
@@ -82,9 +91,20 @@ class SowCommand(BaseCommand):
             self._plant_crop(seed, crop, variables, is_template=is_template)
 
     def run(self) -> None:
+        pending_removal = self.estate.current()
         for config in self.config:
             self.sow_granary(
                 granary_path=config["granary"],
                 templates=config["templates"],
                 variables=config["variables"],
+                estate_path=config["estate"],
+                pending_removal=pending_removal,
             )
+        for crop in pending_removal:
+            if self.dry_run:
+                SGRString(f"Would delete {crop}", prefix="🧹 ").print()
+                continue
+            crop.unlink(missing_ok=True)
+            self.estate.remove(crop)
+        if not self.dry_run:
+            self.estate.set_state()
