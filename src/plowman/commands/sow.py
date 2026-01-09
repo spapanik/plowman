@@ -3,7 +3,6 @@ from __future__ import annotations
 from difflib import unified_diff
 from hashlib import sha256
 from typing import TYPE_CHECKING
-from unittest import case
 
 from jinja2 import StrictUndefined, Template
 from pyutilkit.term import SGRCodes, SGRString
