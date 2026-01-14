@@ -33,6 +33,8 @@ class SowCommand(BaseCommand):
     def _get_content(
         self, path: Path, variables: dict[str, str], *, is_template: bool
     ) -> str:
+        if not path.exists():
+            return ""
         if is_template:
             return Template(
                 path.read_text(),
