@@ -59,9 +59,9 @@ class Estate:
             for item in node:
                 if isinstance(item, str):
                     yield parent.joinpath(item)
-                elif isinstance(item, dict):
+                elif isinstance(item, dict):  # pragma: no branch
                     yield from self._extract_paths(item, parent)
-        elif isinstance(node, dict):
+        elif isinstance(node, dict):  # pragma: no branch
             for key, value in node.items():
                 yield from self._extract_paths(value, parent.joinpath(key))
 

@@ -122,6 +122,7 @@ ignore = [
     "FBT001",  # Test arguments are handled by pytest
     "PLR2004", # Tests should contain magic number comparisons
     "S101",    # Pytest needs assert statements
+    "SLF001",  # Tests need to access private members for coverage
 ]
 
 [tool.ruff.lint.flake8-tidy-imports]
@@ -165,7 +166,7 @@ exclude_also = [
     "raise NotImplementedError",
     "raise UnreachableCodeError",
 ]
-fail_under = 25
+fail_under = 100
 precision = 2
 show_missing = true
 skip_covered = true
