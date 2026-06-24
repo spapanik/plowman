@@ -4,13 +4,22 @@ repo_url: https://github.com/spapanik/plowman/
 
 nav:
   - Home: README.md
-  - Installation: installation.md
-  - Usage:
-      - usage/index.md
+  - Getting Started:
+      - Installation: installation.md
+      - Tutorial: tutorial.md
+  - User Guide:
+      - Usage: usage/index.md
+      - Configuration: configuration.md
+      - CLI Reference: cli-reference.md
+  - Support:
+      - FAQ: faq.md
+      - Troubleshooting: troubleshooting.md
   - About:
       - License: LICENSE.md
       - Changelog: CHANGELOG.md
       - Code of Conduct: CODE_OF_CONDUCT.md
+  - Development:
+      - Architecture: development/architecture.md
 
 markdown_extensions:
   - pymdownx.highlight:
