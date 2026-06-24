@@ -1,6 +1,6 @@
 [build-system]
 requires = [
-    "uv_build>=0.9.21,<0.10.0",
+    "uv_build>=0.11.0,<0.12.0",
 ]
 build-backend = "uv_build"
 
@@ -22,7 +22,6 @@ classifiers = [
     "Development Status :: 1 - Planning",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3 :: Only",
-    "License :: OSI Approved :: BSD License",
     "Intended Audience :: Developers",
 ]
 
@@ -142,7 +141,10 @@ split-on-trailing-comma = false
 [tool.pytest]
 minversion = "9.0"
 strict = true
-addopts = ["-ra", "-v"]
+addopts = [
+    "-ra",
+    "-v",
+]
 testpaths = [
     "tests",
 ]
