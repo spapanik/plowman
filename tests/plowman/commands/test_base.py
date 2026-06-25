@@ -23,8 +23,7 @@ def test_base_command_missing_config() -> None:
 
 def test_base_command_parse_config_missing_granary(tmp_path: Path) -> None:
     config_path = tmp_path / "config.yml"
-    fake_granary_path = tmp_path / "fake_granary"
-    config_path.write_text(f"granaries:\n  {fake_granary_path}:\n    granaries: []\n")
+    config_path.write_text(f"estates:\n  {tmp_path}:\n    granaries: []\n")
 
     with mock.patch("plowman.commands.base.CONFIG_PATH", config_path):
         cmd = BaseCommand()
@@ -44,7 +43,7 @@ def test_base_command_parse_config_success(tmp_path: Path) -> None:
     granary_dir = tmp_path / "my_granary"
     granary_dir.mkdir()
 
-    config_path.write_text(f"granaries:\n  {tmp_path}:\n    granaries: [my_granary]\n")
+    config_path.write_text(f"estates:\n  {tmp_path}:\n    granaries: [my_granary]\n")
 
     with mock.patch("plowman.commands.base.CONFIG_PATH", config_path):
         cmd = BaseCommand()
@@ -61,7 +60,7 @@ def test_base_command_run_not_implemented(tmp_path: Path) -> None:
     config_path = tmp_path / "config.yml"
     granary_dir = tmp_path / "my_granary"
     granary_dir.mkdir()
-    config_path.write_text(f"granaries:\n  {tmp_path}:\n    granaries: [my_granary]\n")
+    config_path.write_text(f"estates:\n  {tmp_path}:\n    granaries: [my_granary]\n")
     with (
         mock.patch("plowman.commands.base.CONFIG_PATH", config_path),
         pytest.raises(NotImplementedError),

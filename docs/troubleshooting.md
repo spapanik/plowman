@@ -137,7 +137,7 @@ Create the configuration file:
 ```console
 $ mkdir -p ~/.config/plowman
 $ cat > ~/.config/plowman/config.yaml << 'EOF'
-granaries:
+estates:
   ~/dotfiles:
     granaries: ["bash"]
 EOF
@@ -173,12 +173,12 @@ $ mkdir -p ~/dotfiles/bash
 **Fix typo in config:**
 ```yaml
 # Wrong
-granaries:
+estates:
   ~/dotfiles:
     granaries: ["bsh"]  # Typo!
 
 # Correct
-granaries:
+estates:
   ~/dotfiles:
     granaries: ["bash"]
 ```
@@ -186,7 +186,7 @@ granaries:
 **Use absolute paths:**
 ```yaml
 # Better
-granaries:
+estates:
   /home/user/dotfiles:
     granaries: ["bash"]
 ```
@@ -211,12 +211,12 @@ $ python3 -c "import yaml; yaml.safe_load(open('~/.config/plowman/config.yaml'))
 Tabs instead of spaces:
 ```yaml
 # Wrong (uses tabs)
-granaries:
+estates:
 →~/dotfiles:
 →→granaries: ["bash"]
 
 # Correct (uses spaces)
-granaries:
+estates:
   ~/dotfiles:
     granaries: ["bash"]
 ```
@@ -235,12 +235,12 @@ variables:
 Incorrect indentation:
 ```yaml
 # Wrong
-granaries:
+estates:
 ~/dotfiles:
 granaries: ["bash"]
 
 # Correct
-granaries:
+estates:
   ~/dotfiles:
     granaries: ["bash"]
 ```
@@ -259,7 +259,7 @@ jinja2.exceptions.UndefinedError: 'username' is undefined
 
 **Add variable to config:**
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries: ["bash"]
     variables:
@@ -366,7 +366,7 @@ bash:
 
 **Check granary configuration:**
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries:
       - bash      # Is this listed?
@@ -409,7 +409,7 @@ $ plm sow --dry-run -v
 
 **Add file back to configuration:**
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries:
       - bash

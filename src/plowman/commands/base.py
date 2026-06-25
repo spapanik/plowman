@@ -36,7 +36,7 @@ class BaseCommand:
                 raise MissingGranaryError(granary_path)
             granary_data = data.get(granary_name, {})
             templates = granary_data.get("templates", [])
-            name = granary_data.get("name", None)
+            name = config.get("name", None)
             yield {
                 "estate": estate,
                 "variables": variables,
@@ -50,11 +50,11 @@ class BaseCommand:
     def _get_config(self) -> list[ParsedConfig]:
         if not CONFIG_PATH.exists():
             raise MissingConfigError
-        config_path = ConfigParser([CONFIG_PATH]).data["granaries"]
+        config_path = ConfigParser([CONFIG_PATH]).data["estates"]
         return [
-            granary_config
+            estate_config
             for path, config in config_path.items()
-            for granary_config in self._parse_config(Path(path), config)
+            for estate_config in self._parse_config(Path(path), config)
         ]
 
     def run(self) -> None:

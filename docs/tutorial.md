@@ -92,7 +92,7 @@ $ mkdir -p ~/.config/plowman
 Create `~/.config/plowman/config.yaml`:
 
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries:
       - bash
@@ -185,7 +185,7 @@ First, update your config to include variables:
 
 ```yaml
 # ~/.config/plowman/config.yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries:
       - bash
@@ -366,7 +366,7 @@ Update your main config:
 
 ```yaml
 # ~/.config/plowman/config.yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries:
       - bash
@@ -419,7 +419,7 @@ fi
 Update config with OS variable:
 
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries:
       - bash

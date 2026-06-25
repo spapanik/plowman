@@ -68,7 +68,7 @@ Currently, plowman copies files rather than creating symlinks. However, you can 
 # ~/.config/plowman/config.yaml
 allow_symlinks: true
 
-granaries:
+estates:
   ~/dotfiles:
     granaries: ["bash"]
 ```
@@ -84,7 +84,7 @@ There are several approaches:
 **1. Don't include them in granaries:**
 Only list subdirectories you want to deploy:
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries:
       - bash      # Deploy this
@@ -103,7 +103,7 @@ secrets/
 **3. Separate sensitive configs:**
 Keep sensitive files in a separate granary that you don't sync:
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries: ["bash", "git"]
   
@@ -348,7 +348,7 @@ $ mv ~/.gitconfig ~/dotfiles/git/
 
 **2. Create plowman config:**
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries:
       - bash
@@ -375,14 +375,14 @@ Yes! Start small:
 
 **Phase 1:** Manage just one granary
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries: ["bash"]  # Start with just bash
 ```
 
 **Phase 2:** Add more granaries as you're comfortable
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries:
       - bash
@@ -391,7 +391,7 @@ granaries:
 
 **Phase 3:** Add templates and variables
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries: ["bash", "git"]
     variables:   # Added

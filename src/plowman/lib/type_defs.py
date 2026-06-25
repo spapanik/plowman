@@ -17,5 +17,6 @@ class ParsedConfig(TypedDict):
 
 
 class PlowmanConfig(TypedDict, total=False):
+    name: str
     granaries: list[str]
     variables: dict[str, str]

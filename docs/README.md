@@ -33,7 +33,7 @@ $ uv tool install plowman
 Create a basic configuration at `~/.config/plowman/config.yaml`:
 
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries: ["bash", "nvim"]
     variables:

@@ -13,7 +13,7 @@ plowman is a command-line tool that deploys configuration files from source dire
 Create or edit `~/.config/plowman/config.yaml`:
 
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries: ["bash", "nvim"]
     variables:
@@ -125,7 +125,7 @@ Files listed here will be processed as Jinja2 templates. All other files are tre
 Define variables in your main config:
 
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries: ["bash"]
     variables:
@@ -250,7 +250,7 @@ Group related configurations into separate granaries:
 You can manage multiple independent dotfile repositories:
 
 ```yaml
-granaries:
+estates:
   ~/personal-dotfiles:
     granaries: ["shell", "editor"]
     variables:

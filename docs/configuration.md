@@ -6,7 +6,7 @@ This document explains how to configure plowman using YAML configuration files.
 
 plowman uses a hierarchical configuration system with three levels:
 
-1. **Main Config**: `~/.config/plowman/config.yaml` - Defines granaries and variables
+1. **Main Config**: `~/.config/plowman/config.yaml` - Defines estates and variables
 2. **Per-Path Config**: `{path}/.plowman/plowman.yml` - Specifies which files are templates
 3. **Estate File**: `{path}/.plowman/estate.yml` - Auto-generated state tracking (don't edit manually)
 
@@ -19,7 +19,7 @@ This is the primary configuration file where you define your granaries, their lo
 ### Basic Structure
 
 ```yaml
-granaries:
+estates:
   /absolute/path/to/dotfiles:
     granaries:
       - subdir1
@@ -31,13 +31,13 @@ granaries:
 
 ### Fields Explained
 
-#### `granaries` (required)
+#### `estates` (required)
 
 Top-level mapping of paths to their configurations. Each key is an absolute path to a directory containing your dotfile repositories.
 
 Example:
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     # configuration for this path
   ~/work-dotfiles:
@@ -51,7 +51,7 @@ For each path, you specify:
 **`granaries`** (required): List of subdirectories within the path that contain dotfiles.
 
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries:
       - bash
@@ -64,7 +64,7 @@ Each listed subdirectory will be scanned recursively for files to deploy.
 **`variables`** (optional): Dictionary of variables for Jinja2 template rendering.
 
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries: ["bash", "nvim"]
     variables:
@@ -79,7 +79,7 @@ These variables are available in all templates under this path.
 ### Complete Example
 
 ```yaml
-granaries:
+estates:
   ~/personal-dotfiles:
     granaries:
       - shell
@@ -107,7 +107,7 @@ You can add global options at the top level of the config file:
 ```yaml
 allow_symlinks: false
 
-granaries:
+estates:
   ~/dotfiles:
     granaries: ["bash"]
 ```
@@ -215,7 +215,7 @@ If you need to reset the estate:
 ### Simple Single Granary
 
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries: ["all"]
 ```
@@ -225,7 +225,7 @@ This deploys everything from `~/dotfiles/all/` to your home directory.
 ### Multiple Granaries with Variables
 
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries:
       - bash
@@ -240,7 +240,7 @@ granaries:
 ### Environment-Specific Configurations
 
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries: ["base"]
     variables:
@@ -257,7 +257,7 @@ granaries:
 
 ```yaml
 # ~/.config/plowman/config.yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries:
       - shell
@@ -294,12 +294,12 @@ Always use absolute paths in your main config:
 
 ```yaml
 # Good
-granaries:
+estates:
   /home/user/dotfiles:
     granaries: ["bash"]
 
 # Bad - may not work as expected
-granaries:
+estates:
   ~/dotfiles:
     granaries: ["bash"]
 ```
@@ -324,7 +324,7 @@ dotfiles/
 Use multiple paths for different contexts:
 
 ```yaml
-granaries:
+estates:
   ~/personal-dotfiles:
     granaries: ["shell", "editor"]
     variables:
@@ -359,7 +359,7 @@ Add estate files to `.gitignore`:
 Keep track of what variables you use across templates:
 
 ```yaml
-granaries:
+estates:
   ~/dotfiles:
     granaries: ["shell"]
     variables:

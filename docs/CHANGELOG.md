@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+### Changed
+
+- Refactored configuration structure: renamed top-level `granaries` key to `estates` for better semantic clarity
+
 ## [0.4.0] - 2026-06-25
 
 ### Added
