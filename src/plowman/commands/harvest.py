@@ -141,11 +141,23 @@ class HarvestCommand(BaseCommand):
             # Calculate seed path in granary
             seed = self._get_seed_path(crop, granary_path)
 
-            # Check if this corresponds to a template
+            # Check if this seed actually exists in this granary
+            # If not, skip this granary for this crop
             is_template = self._is_template_seed(seed, templates)
+            seed_to_check = (
+                seed.with_suffix(f"{seed.suffix}.j2")
+                if is_template and not seed.exists()
+                else seed
+            )
+
+            if not seed_to_check.exists():
+                # This crop doesn't belong to this granary, skip
+                continue
+
+            # Check if this corresponds to a template
             if is_template and not seed.exists():
                 # Try with .j2 suffix
-                seed = seed.with_suffix(f"{seed.suffix}.j2")
+                seed = seed_to_check
 
             # Skip templates - cannot harvest rendered templates back
             if is_template:

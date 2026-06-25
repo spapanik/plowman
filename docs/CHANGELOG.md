@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 - Refactored configuration structure: renamed top-level `granaries` key to `estates` for better semantic clarity
 
+### Fixed
+
+- Fixed plm harvest trying to collect all granaries to all estates
+
 ## [0.4.0] - 2026-06-25
 
 ### Added
