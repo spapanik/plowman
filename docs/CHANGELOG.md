@@ -8,16 +8,22 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ### Added
 
-- Added a harvest command
+- Added plm harvest command, creating bidirectional sync to collect changed files from HOME back to granaries
+- Comprehensive documentation suite (CLI reference, tutorial, configuration guide)
 
-## [0.3.1] - 2026-06-24
+### Changed
+
+- Exposed `get_crops_by_estate()` public method in Estate class
+
+
+## [0.3.1] - 2026-01-09
 
 ### Fixed
 
 - Don't break on missing files during deployment (#274a887)
 - Remove unused import for cleaner codebase (#750d7e7)
 
-## [0.3.0] - 2026-06-24
+## [0.3.0] - 2026-01-08
 
 ### Added
 
@@ -28,13 +34,13 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 - Enhanced verbosity levels to show diffs at level 2+
 
-## [0.2.1] - 2026-06-24
+## [0.2.1] - 2025-12-18
 
 ### Fixed
 
 - Add missing dependency to ensure proper functionality (#3a8e3bb)
 
-## [0.2.0] - 2026-06-24
+## [0.2.0] - 2025-12-16
 
 ### Added
 
@@ -51,7 +57,7 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 - Add comprehensive test suite (#02eeb62)
 
-## [0.1.0] - 2026-06-24
+## [0.1.0] - 2025-12-07
 
 ### Added
 
