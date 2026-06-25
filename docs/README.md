@@ -17,6 +17,7 @@
 - **State tracking**: Automatically track which files are managed via estate files  
 - **Smart updates**: Skip unchanged files using SHA256 hashing for efficient deployments
 - **Automatic cleanup**: Remove orphaned files that are no longer in your configuration
+- **Bidirectional sync**: Deploy with `sow`, collect changes back with `harvest`
 - **Dry-run mode**: Preview changes before applying them with `--dry-run`
 - **Colored diffs**: See exactly what changed with syntax-highlighted diff output
 - **Multiple granaries**: Manage dotfiles from multiple source directories with different variables
@@ -46,6 +47,12 @@ Deploy your dotfiles:
 $ plm sow
 ```
 
+Collect changes back from your home directory:
+
+```console
+$ plm harvest -v
+```
+
 ## The Agricultural Metaphor
 
 plowman uses an agricultural metaphor for managing dotfiles:
@@ -54,8 +61,9 @@ plowman uses an agricultural metaphor for managing dotfiles:
 - **Seeds**: Individual source files in granaries (templates or plain files)  
 - **Crops**: Deployed files in your home directory
 - **Estate**: State tracking file that records which crops are managed
+- **Harvest**: Collecting changed crops back to the granary
 
-This metaphor represents the process of planting (deploying) configuration files from source granaries to your home directory, where they grow into usable configuration files.
+This metaphor represents the full lifecycle: planting (deploying with `sow`) configuration files from source granaries to your home directory where they grow into usable configuration files, and harvesting (collecting with `harvest`) changes back when you edit them manually.
 
 ## Next Steps
 

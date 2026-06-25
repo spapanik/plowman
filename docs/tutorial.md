@@ -481,6 +481,180 @@ Congratulations! You've successfully:
 - ✅ Seen automatic cleanup in action
 - ✅ Created advanced templates with conditionals
 
+### Continue Learning: Harvest Command
+
+Now that you know how to deploy configs with `sow`, learn how to collect changes back with `harvest`:
+
+#### Step 15: Understanding Harvest
+
+The `harvest` command does the opposite of `sow` - it collects changed files from your home directory back into your granaries.
+
+**When to use harvest:**
+- You manually edited a config file in HOME (not through your dotfiles repo)
+- You want to sync changes made on one machine back to your central dotfiles repo
+- You're setting up a new machine and need to collect existing configs
+
+#### Step 16: Add Granary Names for Harvest
+
+To use the `-a/--add-to-estate` feature, add names to your granaries:
+
+```yaml
+# ~/dotfiles/.plowman/plowman.yml
+bash:
+  name: myshell  # Add this line
+  templates:
+    - .bashrc.j2
+
+git:
+  name: mygit  # Add this line
+  templates:
+    - .gitconfig.j2
+```
+
+#### Step 17: Make Manual Changes
+
+Let's say you edited `.bashrc` directly instead of through your dotfiles repo:
+
+```console
+$ echo "# New alias" >> ~/.bashrc
+$ echo "alias docker='sudo docker'" >> ~/.bashrc
+```
+
+#### Step 18: Preview Changes with Dry-Run
+
+See what would be harvested:
+
+```console
+$ plm harvest --dry-run -v
+☑️ Would harvest /home/user/.bashrc to /home/user/dotfiles/bash/.bashrc
+```
+
+See detailed diffs:
+
+```console
+$ plm harvest --dry-run -vv
+☑️ Would harvest /home/user/.bashrc to /home/user/dotfiles/bash/.bashrc
+    @@ -8,3 +8,5 @@
+     export HISTSIZE=10000
+    +
+    +# New alias
+    +alias docker='sudo docker'
+```
+
+#### Step 19: Harvest the Changes
+
+Collect the changes back to your granary:
+
+```console
+$ plm harvest -v
+☑️ Harvesting /home/user/.bashrc to /home/user/dotfiles/bash/.bashrc
+```
+
+Verify the granary was updated:
+
+```console
+$ tail -3 ~/dotfiles/bash/.bashrc
+
+# New alias
+alias docker='sudo docker'
+```
+
+#### Step 20: Commit to Version Control
+
+Now commit the harvested changes:
+
+```console
+$ cd ~/dotfiles
+$ git status
+$ git add bash/.bashrc
+$ git commit -m "Add docker alias from manual edit"
+$ git push
+```
+
+#### Step 21: Add New Files with --add-to-estate
+
+Suppose you created a new config file manually:
+
+```console
+$ cat > ~/.tmux.conf << 'EOF'
+# TMUX configuration
+set -g mouse on
+set -g status-bg blue
+EOF
+```
+
+Add it to estate tracking and harvest it in one command:
+
+```console
+$ plm harvest -a myshell::/home/user/.tmux.conf -v
+☑️ Harvesting /home/user/.tmux.conf to /home/user/dotfiles/bash/.tmux.conf
+```
+
+This:
+1. Adds `/home/user/.tmux.conf` to estate tracking under the `myshell` granary
+2. Copies it to `~/dotfiles/bash/.tmux.conf`
+3. Updates the estate file
+
+Verify:
+
+```console
+$ ls ~/dotfiles/bash/.tmux.conf
+/home/user/dotfiles/bash/.tmux.conf
+
+$ cat ~/dotfiles/.plowman/estate.yml
+files:
+  - .bashrc
+  - .tmux.conf  # Newly added!
+```
+
+#### Step 22: Sync Across Machines
+
+Harvest makes it easy to sync configs between machines:
+
+**On Machine A (where you made changes):**
+
+```console
+# Harvest all manual changes
+$ plm harvest -v
+
+# Commit and push
+$ cd ~/dotfiles
+$ git add .
+$ git commit -m "Sync from Machine A"
+$ git push
+```
+
+**On Machine B:**
+
+```console
+# Pull latest changes
+$ cd ~/dotfiles
+$ git pull
+
+# Deploy to Machine B
+$ plm sow -v
+```
+
+Now both machines have the same configuration!
+
+#### Step 23: Template Files and Harvest
+
+Harvest handles template files automatically:
+
+```console
+# HOME has: ~/.gitconfig (rendered, no .j2)
+# Granary has: ~/dotfiles/git/.gitconfig.j2 (template source)
+
+# Edit the rendered file
+$ echo "[diff]\n    tool = meld" >> ~/.gitconfig
+
+# Harvest will update the .j2 template
+$ plm harvest -v
+☑️ Harvesting /home/user/.gitconfig to /home/user/dotfiles/git/.gitconfig.j2
+```
+
+⚠️ **Note:** When harvesting template files, you're copying the *rendered* content back to the template. If the template contains Jinja2 variables, they will be replaced with actual values. Consider editing the `.j2` file directly in your granary instead.
+
 Continue learning:
 - Read the complete [Usage Guide](./usage/) for all features
 - Explore the [Configuration Reference](./configuration.md) for advanced options

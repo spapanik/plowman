@@ -34,7 +34,9 @@ class BaseCommand:
             granary_path = path.joinpath(granary_name)
             if not granary_path.exists() or not granary_path.is_dir():
                 raise MissingGranaryError(granary_path)
-            templates = data.get(granary_name, {}).get("templates", [])
+            granary_data = data.get(granary_name, {})
+            templates = granary_data.get("templates", [])
+            name = granary_data.get("name", None)
             yield {
                 "estate": estate,
                 "variables": variables,
@@ -42,6 +44,7 @@ class BaseCommand:
                 "templates": {
                     granary_path.joinpath(template) for template in templates
                 },
+                "name": name,
             }
 
     def _get_config(self) -> list[ParsedConfig]:

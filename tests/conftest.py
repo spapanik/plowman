@@ -18,5 +18,6 @@ def fake_config(tmp_path: Path) -> list[ParsedConfig]:
             "granary": tmp_path / "granary",
             "templates": {tmp_path / "granary" / "templates.jinja"},
             "variables": {"owner": "test-owner"},
+            "name": None,
         }
     ]

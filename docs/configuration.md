@@ -124,10 +124,13 @@ This optional file specifies which files in each granary should be treated as Ji
 
 ```yaml
 granary_name:
+  name: optional_display_name  # Optional: used for harvest --add-to-estate
   templates:
     - filename.j2
     - another_file.conf.j2
 ```
+
+The `name` field is optional and provides a human-readable identifier for the granary. This is particularly useful when using the `harvest` command with the `-a/--add-to-estate` option.
 
 ### Example
 
@@ -136,11 +139,13 @@ For a path `~/dotfiles` with granaries `bash` and `nvim`:
 ```yaml
 # ~/dotfiles/.plowman/plowman.yml
 bash:
+  name: myshell  # Optional: use this name with "plm harvest -a myshell::path"
   templates:
     - .bashrc.j2
     - .bash_profile.j2
 
 nvim:
+  name: myeditor  # Optional: use this name with "plm harvest -a myeditor::path"
   templates:
     - init.vim.j2
     - coc-settings.json.j2

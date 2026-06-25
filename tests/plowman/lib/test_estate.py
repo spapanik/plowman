@@ -78,3 +78,36 @@ def test_estate_extract_paths_dict_branch(fake_config: list[ParsedConfig]) -> No
 
     assert Path("dir1/file1.txt") in paths
     assert Path("dir1/dir2/file2.txt") in paths
+
+
+def test_estate_get_crops_by_estate(
+    tmp_path: Path, fake_config: list[ParsedConfig]
+) -> None:
+    """Test get_crops_by_estate returns crops for specific estate."""
+    estate = Estate(fake_config)
+    estate_path1 = tmp_path / "estate1.yml"
+    estate_path2 = tmp_path / "estate2.yml"
+
+    crop1 = tmp_path / "crop1.txt"
+    crop2 = tmp_path / "crop2.txt"
+    crop3 = tmp_path / "crop3.txt"
+
+    estate.add(crop1, estate_path1)
+    estate.add(crop2, estate_path1)
+    estate.add(crop3, estate_path2)
+
+    # Get crops for estate_path1
+    crops1 = estate.get_crops_by_estate(estate_path1)
+    assert crop1 in crops1
+    assert crop2 in crops1
+    assert crop3 not in crops1
+
+    # Get crops for estate_path2
+    crops2 = estate.get_crops_by_estate(estate_path2)
+    assert crop3 in crops2
+    assert crop1 not in crops2
+    assert crop2 not in crops2
+
+    # Get crops for non-existent estate
+    crops_empty = estate.get_crops_by_estate(tmp_path / "nonexistent.yml")
+    assert crops_empty == set()

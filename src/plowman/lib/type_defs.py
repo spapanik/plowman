@@ -13,6 +13,7 @@ class ParsedConfig(TypedDict):
     granary: Path
     variables: dict[str, str]
     templates: set[Path]
+    name: str | None
 
 
 class PlowmanConfig(TypedDict, total=False):

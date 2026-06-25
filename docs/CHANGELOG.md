@@ -8,15 +8,7 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ### Added
 
-- Nothing yet
-
-### Changed
-
-- Nothing yet
-
-### Fixed
-
-- Nothing yet
+- Added a harvest command
 
 ## [0.3.1] - 2026-06-24
 

@@ -94,3 +94,15 @@ class Estate:
 
     def current(self) -> set[Path]:
         return set(self._state)
+
+    def get_crops_by_estate(self, estate_path: Path) -> set[Path]:
+        """Get all crops managed by a specific estate file.
+
+        Args:
+            estate_path: The path to the estate file
+
+        Returns:
+            Set of crop paths managed by this estate
+
+        """
+        return {crop for crop, estate in self._state.items() if estate == estate_path}
