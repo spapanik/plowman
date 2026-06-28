@@ -51,8 +51,8 @@ dev = [
 ]
 lint = [
     "mypy~=1.19",
-    "ruff~=0.14",
-    "ty~=0.0.9",
+    "ruff~=0.15",
+    "ty~=0.0.26",
     { include-group = "test_core" },
 ]
 test = [
