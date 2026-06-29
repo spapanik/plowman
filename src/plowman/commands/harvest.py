@@ -34,7 +34,7 @@ class HarvestCommand(BaseCommand):
                 )
                 raise ValueError(msg)
             granary_name, file_path_str = entry.split("::", 1)
-            file_path = Path(file_path_str)
+            file_path = Path(file_path_str).expanduser()
 
             matched_config = next(
                 (config for config in self.config if config["name"] == granary_name),

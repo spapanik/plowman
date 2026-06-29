@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 ### Fixed
 
 - Changed `harvest --add-to-estate` to copy new files into the selected granary without prematurely tracking them, preventing the next `sow` from deleting them as orphaned crops
+- Expanded `~` in `harvest --add-to-estate` paths so user-relative and absolute home paths behave identically
 
 ## [0.5.0] - 2026-06-25
 

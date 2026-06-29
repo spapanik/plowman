@@ -353,6 +353,25 @@ def test_process_add_to_estate_valid(
     assert test_file not in harvest_command.estate._state
 
 
+def test_process_add_to_estate_expands_user_path(
+    harvest_command: HarvestCommand, tmp_path: Path
+) -> None:
+    home_dir = tmp_path / "home"
+    home_dir.mkdir()
+    test_file = home_dir / "test.txt"
+    test_file.write_text("content")
+    harvest_command.dry_run = False
+
+    with (
+        mock.patch.dict("os.environ", {"HOME": str(home_dir)}),
+        mock.patch("plowman.commands.harvest.HOME", home_dir),
+    ):
+        harvest_command._process_add_to_estate(["test_granary::~/test.txt"])
+
+    assert (tmp_path / "granary" / "test.txt").read_text() == "content"
+    assert test_file not in harvest_command.estate._state
+
+
 def test_process_add_to_estate_verbose(
     harvest_command: HarvestCommand,
     tmp_path: Path,
