@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed the `harvest --add-to-estate` tilde-expansion regression test on Windows by patching Windows' `USERPROFILE` home lookup
+
 ## [0.5.1] - 2026-06-29
 
 ### Fixed

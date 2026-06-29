@@ -363,7 +363,10 @@ def test_process_add_to_estate_expands_user_path(
     harvest_command.dry_run = False
 
     with (
-        mock.patch.dict("os.environ", {"HOME": str(home_dir)}),
+        mock.patch.dict(
+            "os.environ",
+            {"HOME": str(home_dir), "USERPROFILE": str(home_dir)},
+        ),
         mock.patch("plowman.commands.harvest.HOME", home_dir),
     ):
         harvest_command._process_add_to_estate(["test_granary::~/test.txt"])
