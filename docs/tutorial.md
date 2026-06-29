@@ -583,7 +583,7 @@ set -g status-bg blue
 EOF
 ```
 
-Add it to estate tracking and harvest it in one command:
+Copy it into the granary:
 
 ```console
 $ plm harvest -a myshell::/home/user/.tmux.conf -v
@@ -591,9 +591,8 @@ $ plm harvest -a myshell::/home/user/.tmux.conf -v
 ```
 
 This:
-1. Adds `/home/user/.tmux.conf` to estate tracking under the `myshell` granary
-2. Copies it to `~/dotfiles/bash/.tmux.conf`
-3. Updates the estate file
+1. Copies `/home/user/.tmux.conf` to `~/dotfiles/bash/.tmux.conf`
+2. Leaves the estate unchanged until the next `sow`, which discovers and tracks the new granary file
 
 Verify:
 
@@ -601,10 +600,7 @@ Verify:
 $ ls ~/dotfiles/bash/.tmux.conf
 /home/user/dotfiles/bash/.tmux.conf
 
-$ cat ~/dotfiles/.plowman/estate.yml
-files:
-  - .bashrc
-  - .tmux.conf  # Newly added!
+$ plm sow
 ```
 
 #### Step 22: Sync Across Machines

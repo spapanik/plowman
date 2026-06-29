@@ -378,7 +378,7 @@ $ plm harvest --dry-run -vv
 
 ##### `-a, --add-to-estate`
 
-Add new files to estate tracking and harvest them immediately. Format: `granary_name::path`
+Copy new files into a granary. Format: `granary_name::path`
 
 ```console
 $ plm harvest -a mydots::/home/user/.newconfig
@@ -386,8 +386,8 @@ $ plm harvest -a mydots::/home/user/.newconfig
 ```
 
 This option:
-- Adds the specified path to estate tracking
-- Immediately harvests the file to the named granary
+- Immediately copies the file to the named granary
+- Leaves estate tracking unchanged; the next `sow` tracks the new granary file normally
 - Requires the granary to have a `name` field in its `.plowman/plowman.yml` config
 - Can specify multiple paths: `-a name1::/path1 name2::/path2`
 

@@ -52,7 +52,7 @@ def parse_args() -> PlowmanArgs:
         nargs="*",
         default=[],
         type=str,
-        help="paths to add to estate and harvest (format: name::path)",
+        help="paths to add to a granary (format: name::path)",
     )
 
     args = parser.parse_args()

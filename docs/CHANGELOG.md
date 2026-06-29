@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+### Fixed
+
+- Changed `harvest --add-to-estate` to copy new files into the selected granary without prematurely tracking them, preventing the next `sow` from deleting them as orphaned crops
+
 ## [0.5.0] - 2026-06-25
 
 ### Changed

@@ -339,11 +339,51 @@ def test_harvest_granary_skip_missing_crop(
 def test_process_add_to_estate_valid(
     harvest_command: HarvestCommand, tmp_path: Path
 ) -> None:
-    """Test processing valid --add-to-estate argument."""
-    # The fixture already has a granary named "test_granary"
-    test_file = tmp_path / "test.txt"
-    harvest_command._process_add_to_estate([f"test_granary::{test_file}"])
-    assert test_file in harvest_command.estate._state
+    """Test that --add-to-estate copies into the granary without tracking it."""
+    home_dir = tmp_path / "home"
+    home_dir.mkdir()
+    test_file = home_dir / "test.txt"
+    test_file.write_text("content")
+    harvest_command.dry_run = False
+
+    with mock.patch("plowman.commands.harvest.HOME", home_dir):
+        harvest_command._process_add_to_estate([f"test_granary::{test_file}"])
+
+    assert (tmp_path / "granary" / "test.txt").read_text() == "content"
+    assert test_file not in harvest_command.estate._state
+
+
+def test_process_add_to_estate_verbose(
+    harvest_command: HarvestCommand,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    home_dir = tmp_path / "home"
+    home_dir.mkdir()
+    test_file = home_dir / "test.txt"
+    test_file.write_text("content")
+    harvest_command.dry_run = False
+    harvest_command.verbosity = 1
+
+    with mock.patch("plowman.commands.harvest.HOME", home_dir):
+        harvest_command._process_add_to_estate([f"test_granary::{test_file}"])
+
+    assert f"Harvesting {test_file}" in capsys.readouterr().out
+
+
+def test_process_add_to_estate_dry_run(
+    harvest_command: HarvestCommand, tmp_path: Path
+) -> None:
+    home_dir = tmp_path / "home"
+    home_dir.mkdir()
+    test_file = home_dir / "test.txt"
+    test_file.write_text("content")
+
+    with mock.patch("plowman.commands.harvest.HOME", home_dir):
+        harvest_command._process_add_to_estate([f"test_granary::{test_file}"])
+
+    assert not (tmp_path / "granary" / "test.txt").exists()
+    assert test_file not in harvest_command.estate._state
 
 
 def test_process_add_to_estate_invalid_format(

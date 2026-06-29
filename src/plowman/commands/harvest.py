@@ -23,7 +23,6 @@ class HarvestCommand(BaseCommand):
         self.dry_run = dry_run
         self.add_to_estate = add_to_estate
         self.estate = Estate(self.config)
-        self._process_add_to_estate(add_to_estate)
 
     def _process_add_to_estate(self, add_to_estate: list[str]) -> None:
         """Process --add-to-estate arguments in format granary_name::path."""
@@ -51,8 +50,14 @@ class HarvestCommand(BaseCommand):
                 )
                 raise ValueError(msg)
 
-            # Add to estate tracking
-            self.estate.add(file_path, matched_config["estate"])
+            seed = self._get_seed_path(file_path, matched_config["granary"])
+            if self.dry_run:
+                SGRString(f"Would harvest {file_path} to {seed}", prefix="☑️ ").print()
+                continue
+
+            if self.verbosity:
+                SGRString(f"Harvesting {file_path} to {seed}", prefix="☑️ ").print()
+            self._collect_crop(file_path, seed)
 
     def _get_seed_path(self, crop: Path, granary: Path) -> Path:
         """Calculate where crop should go in granary."""
@@ -187,6 +192,7 @@ class HarvestCommand(BaseCommand):
 
     def run(self) -> None:
         """Execute the harvest command."""
+        self._process_add_to_estate(self.add_to_estate)
         pending_harvest = self.estate.current()
         for config in self.config:
             self.harvest_granary(
