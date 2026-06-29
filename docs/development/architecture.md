@@ -82,11 +82,13 @@ src/plowman/
 The main entry point for the CLI application.
 
 **Responsibilities:**
+
 - Parse command-line arguments
 - Route to appropriate command based on subcommand
 - Initialize and run the command
 
 **Code flow:**
+
 ```python
 def main() -> None:
     args = parse_args()                    # Parse CLI args
@@ -103,12 +105,14 @@ def main() -> None:
 Handles argument parsing using Python's `argparse`.
 
 **Features:**
+
 - Global flags: `--version`, `--verbose`, `--dry-run`
 - Subcommand structure (currently only `sow`)
 - Verbosity stacking (`-v`, `-vv`, `-vvv`)
 - Returns typed `PlowmanArgs` dataclass
 
 **Key classes:**
+
 ```python
 @dataclass(frozen=True, slots=True)
 class PlowmanArgs:
@@ -122,17 +126,20 @@ class PlowmanArgs:
 Abstract base class for all commands.
 
 **Responsibilities:**
+
 - Load configuration from `~/.config/plowman/config.yaml`
 - Parse granary configurations
 - Validate granary paths exist
 - Provide common functionality for all commands
 
 **Key methods:**
+
 - `_get_config()`: Loads and parses main config file
 - `_parse_config()`: Processes each path's configuration
 - `run()`: Abstract method implemented by subclasses
 
 **Configuration loading:**
+
 ```python
 def _get_config(self) -> list[ParsedConfig]:
     if not CONFIG_PATH.exists():
@@ -150,6 +157,7 @@ def _get_config(self) -> list[ParsedConfig]:
 Main implementation of the dotfile deployment logic.
 
 **Responsibilities:**
+
 - Process all configured granaries
 - Render Jinja2 templates
 - Deploy files to home directory
@@ -160,6 +168,7 @@ Main implementation of the dotfile deployment logic.
 **Key methods:**
 
 **`_get_crop_path()`**: Maps seed location to crop location
+
 ```python
 def _get_crop_path(self, granary: Path, seed: Path, *, is_template: bool) -> Path:
     farm = HOME.joinpath(seed.relative_to(granary)).parent
@@ -169,6 +178,7 @@ def _get_crop_path(self, granary: Path, seed: Path, *, is_template: bool) -> Pat
 ```
 
 **`_get_content()`**: Reads and renders templates
+
 ```python
 def _get_content(
     self, path: Path, variables: dict[str, str], *, is_template: bool
@@ -185,6 +195,7 @@ def _get_content(
 ```
 
 **`_should_skip()`**: Compares hashes to avoid unnecessary writes
+
 ```python
 def _should_skip(
     self, seed: Path, crop: Path, variables: dict[str, str], *, is_template: bool
@@ -199,11 +210,13 @@ def _should_skip(
 ```
 
 **`show_diff()`**: Displays unified diff with colored output
+
 - Uses `difflib.unified_diff` for diff generation
 - Color-codes output using `pyutilkit.term.SGRString`
 - Different colors for additions (green), deletions (red), headers (cyan/yellow)
 
 **`sow_granary()`**: Processes all seeds in a granary
+
 - Recursively scans granary directory
 - Determines if each file is a template
 - Calculates crop path
@@ -213,6 +226,7 @@ def _should_skip(
 - Shows diffs if verbose
 
 **`run()`**: Main execution loop
+
 1. Get current estate state
 2. For each config, sow the granary
 3. Remove orphaned crops
@@ -223,21 +237,24 @@ def _should_skip(
 Tracks deployed files for automatic cleanup.
 
 **Responsibilities:**
+
 - Load existing estate from YAML file
 - Add/remove tracked files
 - Detect orphaned files
 - Save updated estate
 
 **Data structure:**
+
 ```yaml
 files:
-  - .bashrc
-  - config:
-    - nvim:
-      - init.vim
+    - .bashrc
+    - config:
+          - nvim:
+                - init.vim
 ```
 
 **Key methods:**
+
 - `current()`: Returns set of currently tracked files
 - `add()`: Adds a file to tracking
 - `remove()`: Removes a file from tracking
@@ -248,19 +265,21 @@ files:
 Uses `dj_settings` library for YAML configuration parsing.
 
 **Configuration hierarchy:**
+
 1. **Main config**: `~/.config/plowman/config.yaml`
-   - Defines paths and granaries
-   - Sets variables for templates
-   
+    - Defines paths and granaries
+    - Sets variables for templates
+
 2. **Per-path config**: `{path}/.plowman/plowman.yml`
-   - Specifies which files are templates
-   - Optional override per path
+    - Specifies which files are templates
+    - Optional override per path
 
 3. **Estate file**: `{path}/.plowman/estate.yml`
-   - Auto-generated state tracking
-   - Not user-edited
+    - Auto-generated state tracking
+    - Not user-edited
 
 **Type definitions** (`lib/type_defs.py`):
+
 ```python
 PlowmanConfig = dict[str, Any]
 ParsedConfig = TypedDict('ParsedConfig', {
@@ -358,28 +377,30 @@ Hashes match?
 
 The code uses agricultural terminology consistently:
 
-| Metaphor | Code Concept | Implementation |
-|----------|--------------|----------------|
-| **Granary** | Source directory | `Path` object pointing to granary dir |
-| **Seed** | Source file | Individual file in granary |
-| **Crop** | Deployed file | File in home directory |
-| **Farm** | Destination directory | Parent dir of crop in home |
-| **Estate** | State tracking | YAML file tracking crops |
-| **Planting** | File deployment | Writing content to crop path |
-| **Weeding** | Cleanup | Removing orphaned crops |
-| **Sowing** | Overall process | The `sow` command |
+| Metaphor     | Code Concept          | Implementation                        |
+| ------------ | --------------------- | ------------------------------------- |
+| **Granary**  | Source directory      | `Path` object pointing to granary dir |
+| **Seed**     | Source file           | Individual file in granary            |
+| **Crop**     | Deployed file         | File in home directory                |
+| **Farm**     | Destination directory | Parent dir of crop in home            |
+| **Estate**   | State tracking        | YAML file tracking crops              |
+| **Planting** | File deployment       | Writing content to crop path          |
+| **Weeding**  | Cleanup               | Removing orphaned crops               |
+| **Sowing**   | Overall process       | The `sow` command                     |
 
 ## Error Handling
 
 ### Custom Exceptions (`lib/exceptions.py`)
 
 **`MissingConfigError`**: Raised when config file doesn't exist
+
 ```python
 class MissingConfigError(Exception):
     """Configuration file not found"""
 ```
 
 **`MissingGranaryError`**: Raised when granary path doesn't exist
+
 ```python
 class MissingGranaryError(Exception):
     """Granary path does not exist"""
@@ -390,6 +411,7 @@ class MissingGranaryError(Exception):
 ### Traceback Control
 
 Verbosity controls traceback display:
+
 ```python
 # In lib/cli.py
 sys.tracebacklimit = 0  # Default: no tracebacks
@@ -403,21 +425,21 @@ if args.verbosity > 0:
 ### Core Dependencies
 
 - **dj_settings** (~8.0): Configuration parsing
-  - Loads YAML config files
-  - Handles hierarchical configuration
-  
+    - Loads YAML config files
+    - Handles hierarchical configuration
+
 - **jinja2** (~3.1): Template rendering
-  - Renders templates with variables
-  - Uses `StrictUndefined` for safety
-  - Preserves trailing newlines
-  
+    - Renders templates with variables
+    - Uses `StrictUndefined` for safety
+    - Preserves trailing newlines
+
 - **pyutilkit** (~0.10): Terminal utilities
-  - Colored output (SGR codes)
-  - Formatted string printing
-  
+    - Colored output (SGR codes)
+    - Formatted string printing
+
 - **ruamel.yaml**: YAML handling
-  - Reads/writes estate files
-  - Preserves formatting
+    - Reads/writes estate files
+    - Preserves formatting
 
 ### Why These Choices?
 
@@ -459,18 +481,18 @@ tests/
 ### Optimization Strategies
 
 1. **Hash-based skipping**: Avoids unnecessary file writes
-   - SHA256 hashing is fast
-   - Only renders templates when needed
-   - Significant speedup for re-deployment
+    - SHA256 hashing is fast
+    - Only renders templates when needed
+    - Significant speedup for re-deployment
 
 2. **Sequential processing**: Simple, predictable memory usage
-   - One file at a time
-   - No parallel overhead
-   - Suitable for typical dotfile counts (<1000 files)
+    - One file at a time
+    - No parallel overhead
+    - Suitable for typical dotfile counts (<1000 files)
 
 3. **Lazy loading**: Config loaded once, reused
-   - Estate loaded at start
-   - Templates rendered on-demand
+    - Estate loaded at start
+    - Templates rendered on-demand
 
 ### Potential Improvements
 
@@ -484,16 +506,16 @@ tests/
 ### Current Safeguards
 
 1. **StrictUndefined**: Prevents silent failures in templates
-   - Undefined variables raise errors
-   - No accidental empty substitutions
+    - Undefined variables raise errors
+    - No accidental empty substitutions
 
 2. **Path validation**: Granary paths must exist
-   - Prevents typos in configuration
-   - Validates before processing
+    - Prevents typos in configuration
+    - Validates before processing
 
 3. **No arbitrary code execution**: Templates are data-only
-   - Jinja2 sandboxed by default
-   - No Python code execution in templates
+    - Jinja2 sandboxed by default
+    - No Python code execution in templates
 
 ### Areas for Improvement
 
@@ -512,6 +534,7 @@ tests/
 4. Add case in `__main__.py` match statement
 
 Example:
+
 ```python
 # commands/harvest.py
 class HarvestCommand(BaseCommand):
@@ -541,12 +564,14 @@ The modular architecture makes it easy to extend:
 ### Why Copy Instead of Symlink?
 
 **Pros of copying:**
+
 - Files are independent after deployment
 - Can edit deployed files (though not recommended)
 - Works across filesystems
 - Simpler mental model
 
 **Cons:**
+
 - Uses more disk space
 - Changes must be synced back manually
 
@@ -570,6 +595,7 @@ The modular architecture makes it easy to extend:
 ### Why Not Use Existing Tools?
 
 Existing dotfile managers either:
+
 - Lack template support
 - Don't track state
 - Are too complex

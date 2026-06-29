@@ -20,13 +20,13 @@ This is the primary configuration file where you define your granaries, their lo
 
 ```yaml
 estates:
-  /absolute/path/to/dotfiles:
-    granaries:
-      - subdir1
-      - subdir2
-    variables:
-      key1: value1
-      key2: value2
+    /absolute/path/to/dotfiles:
+        granaries:
+            - subdir1
+            - subdir2
+        variables:
+            key1: value1
+            key2: value2
 ```
 
 ### Fields Explained
@@ -36,12 +36,13 @@ estates:
 Top-level mapping of paths to their configurations. Each key is an absolute path to a directory containing your dotfile repositories.
 
 Example:
+
 ```yaml
 estates:
-  ~/dotfiles:
-    # configuration for this path
-  ~/work-dotfiles:
-    # configuration for another path
+    ~/dotfiles:
+        # configuration for this path
+    ~/work-dotfiles:
+        # configuration for another path
 ```
 
 #### Path Configuration
@@ -52,11 +53,11 @@ For each path, you specify:
 
 ```yaml
 estates:
-  ~/dotfiles:
-    granaries:
-      - bash
-      - nvim
-      - git
+    ~/dotfiles:
+        granaries:
+            - bash
+            - nvim
+            - git
 ```
 
 Each listed subdirectory will be scanned recursively for files to deploy.
@@ -65,13 +66,13 @@ Each listed subdirectory will be scanned recursively for files to deploy.
 
 ```yaml
 estates:
-  ~/dotfiles:
-    granaries: ["bash", "nvim"]
-    variables:
-      username: myuser
-      hostname: myhost
-      email: user@example.com
-      os: linux
+    ~/dotfiles:
+        granaries: ["bash", "nvim"]
+        variables:
+            username: myuser
+            hostname: myhost
+            email: user@example.com
+            os: linux
 ```
 
 These variables are available in all templates under this path.
@@ -80,24 +81,24 @@ These variables are available in all templates under this path.
 
 ```yaml
 estates:
-  ~/personal-dotfiles:
-    granaries:
-      - shell
-      - editor
-      - git
-    variables:
-      username: john
-      email: john@example.com
-      os: darwin
-  
-  ~/work-dotfiles:
-    granaries:
-      - ssh
-      - vpn
-    variables:
-      username: j.doe
-      email: john.doe@company.com
-      company: acme-corp
+    ~/personal-dotfiles:
+        granaries:
+            - shell
+            - editor
+            - git
+        variables:
+            username: john
+            email: john@example.com
+            os: darwin
+
+    ~/work-dotfiles:
+        granaries:
+            - ssh
+            - vpn
+        variables:
+            username: j.doe
+            email: john.doe@company.com
+            company: acme-corp
 ```
 
 ### Global Options
@@ -108,8 +109,8 @@ You can add global options at the top level of the config file:
 allow_symlinks: false
 
 estates:
-  ~/dotfiles:
-    granaries: ["bash"]
+    ~/dotfiles:
+        granaries: ["bash"]
 ```
 
 **`allow_symlinks`** (optional, default: `false`): If set to `true`, plowman will not overwrite symbolic links in the destination. This is useful if you want to manually symlink some files while managing others with plowman.
@@ -124,10 +125,10 @@ This optional file specifies which files in each granary should be treated as Ji
 
 ```yaml
 granary_name:
-  name: optional_display_name  # Optional: used for harvest --add-to-estate
-  templates:
-    - filename.j2
-    - another_file.conf.j2
+    name: optional_display_name # Optional: used for harvest --add-to-estate
+    templates:
+        - filename.j2
+        - another_file.conf.j2
 ```
 
 The `name` field is optional and provides a human-readable identifier for the granary. This is particularly useful when using the `harvest` command with the `-a/--add-to-estate` option.
@@ -139,19 +140,20 @@ For a path `~/dotfiles` with granaries `bash` and `nvim`:
 ```yaml
 # ~/dotfiles/.plowman/plowman.yml
 bash:
-  name: myshell  # Optional: use this name with "plm harvest -a myshell::path"
-  templates:
-    - .bashrc.j2
-    - .bash_profile.j2
+    name: myshell # Optional: use this name with "plm harvest -a myshell::path"
+    templates:
+        - .bashrc.j2
+        - .bash_profile.j2
 
 nvim:
-  name: myeditor  # Optional: use this name with "plm harvest -a myeditor::path"
-  templates:
-    - init.vim.j2
-    - coc-settings.json.j2
+    name: myeditor # Optional: use this name with "plm harvest -a myeditor::path"
+    templates:
+        - init.vim.j2
+        - coc-settings.json.j2
 ```
 
 In this example:
+
 - `~/dotfiles/bash/.bashrc.j2` will be rendered as a Jinja2 template
 - `~/dotfiles/bash/.bash_profile.j2` will be rendered as a Jinja2 template
 - Any other files in `~/dotfiles/bash/` will be copied as-is
@@ -170,6 +172,7 @@ bash/
 ```
 
 When deployed, the `.j2` extension is removed:
+
 - `.bashrc.j2` → `~/.bashrc`
 - `.bash_aliases` → `~/.bash_aliases`
 
@@ -189,12 +192,12 @@ The estate file is automatically created and maintained by plowman. It tracks al
 
 ```yaml
 files:
-  - .bashrc
-  - .bash_profile
-  - config:
-    - nvim:
-      - init.vim
-  - .gitconfig
+    - .bashrc
+    - .bash_profile
+    - config:
+          - nvim:
+                - init.vim
+    - .gitconfig
 ```
 
 The structure mirrors the directory hierarchy of deployed files relative to your home directory.
@@ -202,11 +205,13 @@ The structure mirrors the directory hierarchy of deployed files relative to your
 ### Important Notes
 
 ⚠️ **Do not manually edit the estate file.** It's automatically managed by plowman. Manual edits may cause:
+
 - Orphaned files not being cleaned up
 - Files being incorrectly deleted
 - State inconsistencies
 
 If you need to reset the estate:
+
 1. Delete the estate file: `rm {path}/.plowman/estate.yml`
 2. Run `plm sow` to rebuild it from scratch
 
@@ -216,8 +221,8 @@ If you need to reset the estate:
 
 ```yaml
 estates:
-  ~/dotfiles:
-    granaries: ["all"]
+    ~/dotfiles:
+        granaries: ["all"]
 ```
 
 This deploys everything from `~/dotfiles/all/` to your home directory.
@@ -226,31 +231,31 @@ This deploys everything from `~/dotfiles/all/` to your home directory.
 
 ```yaml
 estates:
-  ~/dotfiles:
-    granaries:
-      - bash
-      - zsh
-      - git
-    variables:
-      username: alice
-      email: alice@example.com
-      theme: dark
+    ~/dotfiles:
+        granaries:
+            - bash
+            - zsh
+            - git
+        variables:
+            username: alice
+            email: alice@example.com
+            theme: dark
 ```
 
 ### Environment-Specific Configurations
 
 ```yaml
 estates:
-  ~/dotfiles:
-    granaries: ["base"]
-    variables:
-      environment: development
-  
-  ~/prod-dotfiles:
-    granaries: ["base"]
-    variables:
-      environment: production
-      log_level: warn
+    ~/dotfiles:
+        granaries: ["base"]
+        variables:
+            environment: development
+
+    ~/prod-dotfiles:
+        granaries: ["base"]
+        variables:
+            environment: production
+            log_level: warn
 ```
 
 ### Complex Setup with Templates
@@ -258,32 +263,32 @@ estates:
 ```yaml
 # ~/.config/plowman/config.yaml
 estates:
-  ~/dotfiles:
-    granaries:
-      - shell
-      - editor
-      - tools
-    variables:
-      username: bob
-      hostname: workstation
-      python_version: "3.11"
+    ~/dotfiles:
+        granaries:
+            - shell
+            - editor
+            - tools
+        variables:
+            username: bob
+            hostname: workstation
+            python_version: "3.11"
 ```
 
 ```yaml
 # ~/dotfiles/.plowman/plowman.yml
 shell:
-  templates:
-    - .bashrc.j2
-    - .zshrc.j2
-    - .profile.j2
+    templates:
+        - .bashrc.j2
+        - .zshrc.j2
+        - .profile.j2
 
 editor:
-  templates:
-    - nvim/init.lua.j2
-    - nvim/lua/config/keymaps.lua.j2
+    templates:
+        - nvim/init.lua.j2
+        - nvim/lua/config/keymaps.lua.j2
 
 tools:
-  templates: []  # No templates, all files copied as-is
+    templates: [] # No templates, all files copied as-is
 ```
 
 ## Configuration Best Practices
@@ -295,13 +300,13 @@ Always use absolute paths in your main config:
 ```yaml
 # Good
 estates:
-  /home/user/dotfiles:
-    granaries: ["bash"]
+    /home/user/dotfiles:
+        granaries: ["bash"]
 
 # Bad - may not work as expected
 estates:
-  ~/dotfiles:
-    granaries: ["bash"]
+    ~/dotfiles:
+        granaries: ["bash"]
 ```
 
 Note: The tilde (`~`) expansion works on most systems, but absolute paths are more reliable.
@@ -325,15 +330,15 @@ Use multiple paths for different contexts:
 
 ```yaml
 estates:
-  ~/personal-dotfiles:
-    granaries: ["shell", "editor"]
-    variables:
-      context: personal
-  
-  ~/work-dotfiles:
-    granaries: ["git", "ssh", "vpn"]
-    variables:
-      context: work
+    ~/personal-dotfiles:
+        granaries: ["shell", "editor"]
+        variables:
+            context: personal
+
+    ~/work-dotfiles:
+        granaries: ["git", "ssh", "vpn"]
+        variables:
+            context: work
 ```
 
 ### Version Control Your Config
@@ -360,20 +365,20 @@ Keep track of what variables you use across templates:
 
 ```yaml
 estates:
-  ~/dotfiles:
-    granaries: ["shell"]
-    variables:
-      # User information
-      username: alice
-      email: alice@example.com
-      
-      # System settings
-      editor: nvim
-      shell: zsh
-      
-      # Application settings
-      theme: dark
-      font_size: 14
+    ~/dotfiles:
+        granaries: ["shell"]
+        variables:
+            # User information
+            username: alice
+            email: alice@example.com
+
+            # System settings
+            editor: nvim
+            shell: zsh
+
+            # Application settings
+            theme: dark
+            font_size: 14
 ```
 
 ## Troubleshooting Configuration Issues
@@ -388,7 +393,8 @@ estates:
 
 **Error**: `MissingGranaryError: Granary path does not exist: /path/to/granary`
 
-**Solution**: 
+**Solution**:
+
 - Verify the path exists: `ls /path/to/granary`
 - Check for typos in the path
 - Ensure the path is absolute
@@ -399,6 +405,7 @@ estates:
 **Error**: Jinja2 undefined variable errors
 
 **Solution**:
+
 - Check that all variables used in templates are defined in config
 - Use `--dry-run -vvv` to see detailed error messages
 - Verify template syntax is correct
@@ -408,6 +415,7 @@ estates:
 **Error**: YAML parsing errors
 
 **Solution**:
+
 - Validate YAML syntax: `python -c "import yaml; yaml.safe_load(open('config.yaml'))"`
 - Check indentation (use spaces, not tabs)
 - Ensure proper quoting for special characters

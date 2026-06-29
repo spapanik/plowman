@@ -27,6 +27,7 @@ plowman is currently at version 0.3.1, which means it's in early development. Wh
 ### What platforms does plowman support?
 
 plowman is designed for Unix-like systems:
+
 - Linux (all major distributions)
 - macOS
 - BSD variants
@@ -40,17 +41,20 @@ It may work on Windows with WSL (Windows Subsystem for Linux), but this is not o
 plowman doesn't have built-in backup functionality, but you can:
 
 **Manual backup:**
+
 ```console
 $ cp ~/.bashrc ~/.bashrc.backup
 $ plm sow
 ```
 
 **Use dry-run first:**
+
 ```console
 $ plm sow --dry-run -vv
 ```
 
 **Version control your granaries:**
+
 ```console
 $ cd ~/dotfiles
 $ git add .
@@ -64,13 +68,14 @@ Since plowman only overwrites files you explicitly configure, unmanaged files ar
 Currently, plowman copies files rather than creating symlinks. However, you can control symlink behavior:
 
 **Allow symlinks as-is:**
+
 ```yaml
 # ~/.config/plowman/config.yaml
 allow_symlinks: true
 
 estates:
-  ~/dotfiles:
-    granaries: ["bash"]
+    ~/dotfiles:
+        granaries: ["bash"]
 ```
 
 When `allow_symlinks` is `true`, plowman won't overwrite existing symbolic links in the destination. This lets you manually symlink some files while managing others with plowman.
@@ -83,16 +88,18 @@ There are several approaches:
 
 **1. Don't include them in granaries:**
 Only list subdirectories you want to deploy:
+
 ```yaml
 estates:
-  ~/dotfiles:
-    granaries:
-      - bash      # Deploy this
-      # - secrets  # Don't deploy this
+    ~/dotfiles:
+        granaries:
+            - bash # Deploy this
+            # - secrets  # Don't deploy this
 ```
 
 **2. Use .gitignore patterns:**
 If using version control, add sensitive files to `.gitignore`:
+
 ```gitignore
 # ~/dotfiles/.gitignore
 secrets/
@@ -102,14 +109,15 @@ secrets/
 
 **3. Separate sensitive configs:**
 Keep sensitive files in a separate granary that you don't sync:
+
 ```yaml
 estates:
-  ~/dotfiles:
-    granaries: ["bash", "git"]
-  
-  # Local-only, not synced
-  ~/local-dotfiles:
-    granaries: ["secrets"]
+    ~/dotfiles:
+        granaries: ["bash", "git"]
+
+    # Local-only, not synced
+    ~/local-dotfiles:
+        granaries: ["secrets"]
 ```
 
 ### What happens if I manually edit a deployed file?
@@ -120,6 +128,7 @@ If you manually edit a deployed file (crop), plowman will detect the change on t
 - If the source file has changed, plowman will overwrite your manual edits
 
 To preserve manual edits:
+
 1. Copy your changes back to the granary (seed)
 2. Or remove the file from your configuration
 
@@ -130,6 +139,7 @@ This is why it's best to edit files in your granaries, not the deployed copies.
 Yes! This is one of plowman's strengths:
 
 **Setup on each machine:**
+
 1. Clone your dotfiles repository
 2. Install plowman
 3. Create machine-specific config if needed
@@ -138,19 +148,21 @@ Yes! This is one of plowman's strengths:
 **Handle machine differences:**
 
 Use template variables:
+
 ```yaml
 # Machine A config
 variables:
-  hostname: workstation
-  os: darwin
+    hostname: workstation
+    os: darwin
 
-# Machine B config  
+# Machine B config
 variables:
-  hostname: server
-  os: linux
+    hostname: server
+    os: linux
 ```
 
 Or use conditionals in templates:
+
 ```jinja2
 {% if hostname == "workstation" %}
 export DISPLAY=:0
@@ -170,19 +182,22 @@ $ plm sow --dry-run -vvv
 ```
 
 Common issues:
+
 - **Undefined variable**: Check that all variables used in templates are defined in config
 - **Syntax error**: Verify Jinja2 syntax is correct
 - **Missing file**: Ensure template file exists in the granary
 
 Example error:
+
 ```
 jinja2.exceptions.UndefinedError: 'username' is undefined
 ```
 
 Fix by adding the variable to your config:
+
 ```yaml
 variables:
-  username: alice
+    username: alice
 ```
 
 ### Can I use complex Jinja2 features?
@@ -190,6 +205,7 @@ variables:
 Yes! plowman uses the full Jinja2 engine, so you can use:
 
 **Conditionals:**
+
 ```jinja2
 {% if os == "linux" %}
 export SHELL=/bin/bash
@@ -199,6 +215,7 @@ export SHELL=/bin/zsh
 ```
 
 **Loops:**
+
 ```jinja2
 {% for path in paths %}
 export PATH="{{ path }}:$PATH"
@@ -206,12 +223,14 @@ export PATH="{{ path }}:$PATH"
 ```
 
 **Filters:**
+
 ```jinja2
 {{ username | upper }}
 {{ email | default("user@example.com") }}
 ```
 
 **Macros:**
+
 ```jinja2
 {% macro set_env(name, value) %}
 export {{ name }}="{{ value }}"
@@ -230,6 +249,7 @@ If a file contains `{{` or `{%` but shouldn't be processed as a template, either
 Only list actual templates in `.plowman/plowman.yml`
 
 **2. Use raw blocks:**
+
 ```jinja2
 {% raw %}
 This won't be processed: {{ variable }}
@@ -243,6 +263,7 @@ This won't be processed: {{ variable }}
 The estate file (`{path}/.plowman/estate.yml`) automatically tracks which files plowman has deployed. You generally don't need to interact with it directly.
 
 **What it does:**
+
 - Records deployed files for cleanup
 - Enables automatic removal of orphaned files
 - Maintains state between runs
@@ -266,6 +287,7 @@ This will redeploy all files and create a fresh estate file.
 ### Can I share estate files between machines?
 
 No, estate files are machine-specific because:
+
 - They track files relative to your home directory
 - Different machines may have different files deployed
 - They're auto-generated based on actual deployments
@@ -280,11 +302,13 @@ Check these common issues:
 
 **1. File hasn't changed (hash match):**
 plowman skips unchanged files. Force re-deployment by:
+
 - Touching the source file: `touch ~/dotfiles/bash/.bashrc`
 - Or deleting the estate file and re-running
 
 **2. Wrong granary path:**
 Verify the path in your config matches the actual location:
+
 ```console
 $ ls ~/dotfiles/bash/.bashrc
 ```
@@ -294,6 +318,7 @@ Ensure the file is listed in `.plowman/plowman.yml` if it's a template
 
 **4. Verbose output:**
 Run with `-v` to see what's happening:
+
 ```console
 $ plm sow -v
 ```
@@ -301,14 +326,17 @@ $ plm sow -v
 ### Why are files being deleted?
 
 Files are deleted when they're:
+
 - In the estate file (previously deployed)
 - No longer in your current configuration
 
 This is intentional cleanup. To prevent deletion:
+
 - Add the file back to your granaries
 - Or remove it from the estate file (by resetting estate)
 
 Use dry-run to preview deletions:
+
 ```console
 $ plm sow --dry-run -v
 🧹 Would delete /home/user/.old_file
@@ -317,6 +345,7 @@ $ plm sow --dry-run -v
 ### How do I see what files plowman manages?
 
 Check the estate file:
+
 ```console
 $ cat ~/dotfiles/.plowman/estate.yml
 files:
@@ -328,6 +357,7 @@ files:
 ```
 
 Or use verbose mode during deployment:
+
 ```console
 $ plm sow -v
 ☑️ Copying /source to /destination
@@ -340,6 +370,7 @@ $ plm sow -v
 General steps:
 
 **1. Organize your existing dotfiles:**
+
 ```console
 $ mkdir -p ~/dotfiles/{bash,git,nvim}
 $ mv ~/.bashrc ~/dotfiles/bash/
@@ -347,21 +378,24 @@ $ mv ~/.gitconfig ~/dotfiles/git/
 ```
 
 **2. Create plowman config:**
+
 ```yaml
 estates:
-  ~/dotfiles:
-    granaries:
-      - bash
-      - git
-      - nvim
+    ~/dotfiles:
+        granaries:
+            - bash
+            - git
+            - nvim
 ```
 
 **3. Test with dry-run:**
+
 ```console
 $ plm sow --dry-run -v
 ```
 
 **4. Deploy:**
+
 ```console
 $ plm sow
 ```
@@ -374,28 +408,31 @@ Remove the old dotfile manager once you've verified everything works.
 Yes! Start small:
 
 **Phase 1:** Manage just one granary
+
 ```yaml
 estates:
-  ~/dotfiles:
-    granaries: ["bash"]  # Start with just bash
+    ~/dotfiles:
+        granaries: ["bash"] # Start with just bash
 ```
 
 **Phase 2:** Add more granaries as you're comfortable
+
 ```yaml
 estates:
-  ~/dotfiles:
-    granaries:
-      - bash
-      - git      # Added
+    ~/dotfiles:
+        granaries:
+            - bash
+            - git # Added
 ```
 
 **Phase 3:** Add templates and variables
+
 ```yaml
 estates:
-  ~/dotfiles:
-    granaries: ["bash", "git"]
-    variables:   # Added
-      username: alice
+    ~/dotfiles:
+        granaries: ["bash", "git"]
+        variables: # Added
+            username: alice
 ```
 
 This gradual approach lets you test and verify each step.
@@ -405,6 +442,7 @@ This gradual approach lets you test and verify each step.
 ### How fast is plowman?
 
 plowman is very fast because:
+
 - It uses SHA256 hashing to skip unchanged files
 - Only modified files are actually written
 - Templates are only rendered when needed
@@ -414,6 +452,7 @@ For typical dotfile setups (<100 files), deployment takes <1 second.
 ### Does plowman use a lot of memory?
 
 No, plowman is lightweight:
+
 - Processes files one at a time
 - Doesn't load entire files into memory unnecessarily
 - Minimal dependencies

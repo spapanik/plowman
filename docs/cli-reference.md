@@ -5,6 +5,7 @@ Complete reference for plowman command-line interface.
 ## Overview
 
 plowman provides a single command `plm` with two subcommands:
+
 - **`sow`**: Deploy dotfiles from granaries to your home directory
 - **`harvest`**: Collect changes from your home directory back to granaries
 
@@ -97,7 +98,7 @@ $ plm sow -vv
 ☑️ Copying /home/user/dotfiles/bash/.bashrc to /home/user/.bashrc
     @@ -1,5 +1,5 @@
      # My bash configuration
-     
+
      # Aliases
     -alias ll='ls -l'
     +alias ll='ls -la'
@@ -128,6 +129,7 @@ $ plm sow --dry-run
 ```
 
 Useful for:
+
 - Previewing changes before applying them
 - Testing new configurations
 - Verifying cleanup of orphaned files
@@ -163,21 +165,25 @@ options:
 ### Success Messages
 
 Files being copied:
+
 ```
 ☑️ Copying /source/path to /destination/path
 ```
 
 Files that would be copied (dry-run):
+
 ```
 ☑️ Would copy /source/path to /destination/path
 ```
 
 Files being deleted (orphaned):
+
 ```
 🧹 Deleting /path/to/orphaned/file
 ```
 
 Files that would be deleted (dry-run):
+
 ```
 🧹 Would delete /path/to/orphaned/file
 ```
@@ -193,10 +199,11 @@ Diffs use unified diff format with color coding:
 - **Default**: Context lines (unchanged)
 
 Example:
+
 ```
     @@ -1,5 +1,5 @@
      # My bash configuration
-     
+
      # Aliases
     -alias ll='ls -l'
     +alias ll='ls -la'
@@ -213,6 +220,7 @@ Errors are printed to stderr with red coloring when available.
 - **1**: Error - operation failed (see error message for details)
 
 Common error scenarios:
+
 - Missing configuration file
 - Missing granary directory
 - Template rendering errors
@@ -227,16 +235,19 @@ plowman does not currently use any environment variables for configuration. All 
 While not command-line options, these files affect plowman's behavior:
 
 ### Main Config
+
 - **Location**: `~/.config/plowman/config.yaml`
 - **Purpose**: Defines granaries, paths, and variables
 - **Required**: Yes
 
 ### Per-Path Config
+
 - **Location**: `{path}/.plowman/plowman.yml`
 - **Purpose**: Specifies which files are templates
 - **Required**: No (optional)
 
 ### Estate File
+
 - **Location**: `{path}/.plowman/estate.yml`
 - **Purpose**: Tracks deployed files for cleanup
 - **Required**: Auto-generated (don't edit manually)
@@ -244,42 +255,50 @@ While not command-line options, these files affect plowman's behavior:
 ## Examples
 
 ### Basic deployment
+
 ```console
 $ plm sow
 ```
 
 ### Preview changes
+
 ```console
 $ plm sow --dry-run
 ```
 
 ### Verbose deployment
+
 ```console
 $ plm sow -v
 ```
 
 ### Verbose with diffs
+
 ```console
 $ plm sow -vv
 ```
 
 ### Maximum verbosity for debugging
+
 ```console
 $ plm sow -vvv
 ```
 
 ### Dry-run with verbose output
+
 ```console
 $ plm sow --dry-run -vv
 ```
 
 ### Check version
+
 ```console
 $ plm --version
 plowman 0.3.1
 ```
 
 ### Get help
+
 ```console
 $ plm --help
 $ plm sow --help
@@ -307,6 +326,7 @@ The `harvest` command reads your configuration and estate files, detects which m
 - Shows colored diffs in verbose mode
 
 **Use cases:**
+
 - You manually edited a config file in HOME and want to sync it back to your dotfiles repo
 - You want to backup changes made on one machine to your central dotfiles repository
 - You're migrating configs and need to collect all changes
@@ -339,7 +359,7 @@ $ plm harvest -vv
 ☑️ Harvesting /home/user/.bashrc to /home/user/dotfiles/bash/.bashrc
     @@ -1,5 +1,5 @@
      # My bash configuration
-     
+
      # Aliases
     -alias ll='ls -l'
     +alias ll='ls -la'
@@ -361,6 +381,7 @@ $ plm harvest --dry-run
 ```
 
 Useful for:
+
 - Previewing what would be collected
 - Testing before committing changes to your dotfiles repo
 - Understanding which files have diverged
@@ -386,6 +407,7 @@ $ plm harvest -a mydots::/home/user/.newconfig
 ```
 
 This option:
+
 - Immediately copies the file to the named granary
 - Leaves estate tracking unchanged; the next `sow` tracks the new granary file normally
 - Requires the granary to have a `name` field in its `.plowman/plowman.yml` config
@@ -402,12 +424,14 @@ $ plm harvest -a shell::/home/user/.zshrc shell::/home/user/.zprofile
 **Error handling:**
 
 If the granary name doesn't exist:
+
 ```console
 $ plm harvest -a nonexistent::/home/user/.file
 Error: Granary name 'nonexistent' not found. Available names: shell, editor, git
 ```
 
 If format is invalid:
+
 ```console
 $ plm harvest -a /home/user/.file
 Error: Invalid format for --add-to-estate: '/home/user/.file'. Expected format: granary_name::path
@@ -433,11 +457,13 @@ options:
 ### Success Messages
 
 Files being harvested:
+
 ```
 ☑️ Harvesting /source/path to /destination/path
 ```
 
 Files that would be harvested (dry-run):
+
 ```
 ☑️ Would harvest /source/path to /destination/path
 ```
@@ -453,10 +479,11 @@ Diffs use unified diff format with color coding:
 - **Default**: Context lines (unchanged)
 
 Example:
+
 ```
     @@ -1,5 +1,5 @@
      # My bash configuration
-     
+
      # Aliases
     -alias ll='ls -l'
     +alias ll='ls -la'
@@ -470,6 +497,7 @@ Note: For harvest, the "old" version is from the granary (seed) and the "new" ve
 Errors are printed to stderr with red coloring when available.
 
 Common errors:
+
 - Invalid `--add-to-estate` format
 - Granary name not found
 - Permission denied when writing to granary
@@ -481,6 +509,7 @@ Common errors:
 - **1**: Error - operation failed (see error message for details)
 
 Common error scenarios:
+
 - Missing configuration file
 - Invalid `--add-to-estate` format
 - Granary name not found
@@ -496,18 +525,19 @@ To use `-a/--add-to-estate`, granaries must have a `name` field in their per-pat
 ```yaml
 # ~/dotfiles/.plowman/plowman.yml
 shell:
-  name: myshell  # This name is used with --add-to-estate
-  templates:
-    - .bashrc.j2
-    - .zshrc.j2
+    name: myshell # This name is used with --add-to-estate
+    templates:
+        - .bashrc.j2
+        - .zshrc.j2
 
 editor:
-  name: myeditor
-  templates:
-    - init.vim.j2
+    name: myeditor
+    templates:
+        - init.vim.j2
 ```
 
 Then use the name with harvest:
+
 ```console
 $ plm harvest -a myshell::/home/user/.newconfig
 ```
@@ -515,41 +545,49 @@ $ plm harvest -a myshell::/home/user/.newconfig
 ## Examples
 
 ### Basic harvest
+
 ```console
 $ plm harvest
 ```
 
 ### Preview changes
+
 ```console
 $ plm harvest --dry-run
 ```
 
 ### Verbose harvest
+
 ```console
 $ plm harvest -v
 ```
 
 ### Verbose with diffs
+
 ```console
 $ plm harvest -vv
 ```
 
 ### Dry-run with verbose output
+
 ```console
 $ plm harvest --dry-run -vv
 ```
 
 ### Add new file to estate and harvest
+
 ```console
 $ plm harvest -a myshell::/home/user/.tmux.conf
 ```
 
 ### Add multiple files
+
 ```console
 $ plm harvest -a myshell::/home/user/.tmux.conf myshell::/home/user/.screenrc
 ```
 
 ### Harvest with maximum verbosity for debugging
+
 ```console
 $ plm harvest -vvv
 ```
@@ -658,6 +696,7 @@ $ plm harvest >/dev/null 2>&1
 ### Template Files
 
 When harvesting template files:
+
 - The file in HOME has no `.j2` extension (e.g., `.bashrc`)
 - The file in granary has `.j2` extension (e.g., `.bashrc.j2`)
 - Harvest automatically handles this mapping

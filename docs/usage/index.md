@@ -14,11 +14,11 @@ Create or edit `~/.config/plowman/config.yaml`:
 
 ```yaml
 estates:
-  ~/dotfiles:
-    granaries: ["bash", "nvim"]
-    variables:
-      username: myuser
-      hostname: myhost
+    ~/dotfiles:
+        granaries: ["bash", "nvim"]
+        variables:
+            username: myuser
+            hostname: myhost
 ```
 
 ### 2. Add Dotfiles
@@ -57,30 +57,34 @@ Deploy dotfiles from configured granaries to your home directory.
 ### Options
 
 - `-v, --verbose`: Increase verbosity level (can be stacked: `-vv`, `-vvv`)
-  - Level 1 (`-v`): Show which files are being copied
-  - Level 2 (`-vv`): Show file diffs during copy
-  - Level 3+ (`-vvv`): Maximum verbosity with full tracebacks on errors
+    - Level 1 (`-v`): Show which files are being copied
+    - Level 2 (`-vv`): Show file diffs during copy
+    - Level 3+ (`-vvv`): Maximum verbosity with full tracebacks on errors
 - `-n, --dry-run`: Preview changes without making any modifications
 - `-V, --version`: Print version information and exit
 
 ### Examples
 
 Basic deployment:
+
 ```console
 $ plm sow
 ```
 
 Preview changes first:
+
 ```console
 $ plm sow --dry-run
 ```
 
 Verbose output with diffs:
+
 ```console
 $ plm sow -vv
 ```
 
 Maximum verbosity for debugging:
+
 ```console
 $ plm sow -vvv
 ```
@@ -93,12 +97,12 @@ plowman follows this workflow when you run `plm sow`:
 2. **Parse Granaries**: For each configured path, reads optional `.plowman/plowman.yml` to identify templates
 3. **Initialize Estate**: Loads the estate file to track current state
 4. **Process Seeds**: For each file in each granary:
-   - Determines if it's a template or plain file
-   - Calculates the destination path (crop) in your home directory
-   - Compares SHA256 hashes to detect changes
-   - Renders templates with Jinja2 if needed
-   - Writes the file to the destination
-   - Shows diff if verbose mode is enabled
+    - Determines if it's a template or plain file
+    - Calculates the destination path (crop) in your home directory
+    - Compares SHA256 hashes to detect changes
+    - Renders templates with Jinja2 if needed
+    - Writes the file to the destination
+    - Shows diff if verbose mode is enabled
 5. **Cleanup Orphans**: Removes files tracked in the estate but no longer present in configuration
 6. **Update Estate**: Saves the new state to the estate file
 
@@ -113,9 +117,9 @@ To mark specific files as templates, create a `.plowman/plowman.yml` file in you
 ```yaml
 # ~/dotfiles/.plowman/plowman.yml
 bash:
-  templates:
-    - .bashrc.j2
-    - .bash_profile.j2
+    templates:
+        - .bashrc.j2
+        - .bash_profile.j2
 ```
 
 Files listed here will be processed as Jinja2 templates. All other files are treated as plain files and copied as-is.
@@ -126,12 +130,12 @@ Define variables in your main config:
 
 ```yaml
 estates:
-  ~/dotfiles:
-    granaries: ["bash"]
-    variables:
-      username: myuser
-      hostname: myhost
-      email: user@example.com
+    ~/dotfiles:
+        granaries: ["bash"]
+        variables:
+            username: myuser
+            hostname: myhost
+            email: user@example.com
 ```
 
 Use them in templates:
@@ -157,11 +161,13 @@ export EMAIL="user@example.com"
 Jinja2 provides powerful templating features:
 
 **Variables:**
+
 ```jinja2
 {{ variable_name }}
 ```
 
 **Conditionals:**
+
 ```jinja2
 {% if os == "linux" %}
 export SHELL=/bin/bash
@@ -171,6 +177,7 @@ export SHELL=/bin/zsh
 ```
 
 **Loops:**
+
 ```jinja2
 {% for path in paths %}
 export PATH="{{ path }}:$PATH"
@@ -189,11 +196,11 @@ Example estate file:
 
 ```yaml
 files:
-  - .bashrc
-  - .bash_profile
-  - config:
-    - nvim:
-      - init.vim
+    - .bashrc
+    - .bash_profile
+    - config:
+          - nvim:
+                - init.vim
 ```
 
 ### How Estate Tracking Works
@@ -208,6 +215,7 @@ files:
 **Warning**: Do not manually edit the estate file. It's automatically managed by plowman. Manual edits may cause unexpected behavior.
 
 If you need to reset the estate:
+
 1. Delete the estate file: `rm ~/.plowman/estate.yml`
 2. Run `plm sow` to rebuild it from scratch
 
@@ -223,6 +231,7 @@ $ plm sow --dry-run
 ```
 
 This is useful for:
+
 - Testing new configurations before applying them
 - Understanding what files will be affected
 - Verifying cleanup of orphaned files
@@ -251,20 +260,21 @@ You can manage multiple independent dotfile repositories:
 
 ```yaml
 estates:
-  ~/personal-dotfiles:
-    granaries: ["shell", "editor"]
-    variables:
-      type: personal
-  
-  ~/work-dotfiles:
-    granaries: ["git", "ssh"]
-    variables:
-      type: work
+    ~/personal-dotfiles:
+        granaries: ["shell", "editor"]
+        variables:
+            type: personal
+
+    ~/work-dotfiles:
+        granaries: ["git", "ssh"]
+        variables:
+            type: work
 ```
 
 ### Version Control
 
 Store your granaries in version control (e.g., Git) to:
+
 - Track changes to your configurations
 - Sync across multiple machines
 - Collaborate with others

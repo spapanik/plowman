@@ -93,13 +93,14 @@ Create `~/.config/plowman/config.yaml`:
 
 ```yaml
 estates:
-  ~/dotfiles:
-    granaries:
-      - bash
-      - git
+    ~/dotfiles:
+        granaries:
+            - bash
+            - git
 ```
 
 This tells plowman:
+
 - Look in `~/dotfiles` for your dotfile repositories
 - Deploy files from the `bash` and `git` subdirectories
 - No template variables needed yet (we'll add those later)
@@ -115,6 +116,7 @@ $ plm sow --dry-run
 ```
 
 This shows:
+
 - Which files would be copied
 - Source and destination paths
 - No actual changes are made
@@ -171,6 +173,7 @@ files:
 ```
 
 This file:
+
 - Tracks which files plowman manages
 - Enables automatic cleanup of orphaned files
 - Is automatically updated on each run
@@ -186,14 +189,14 @@ First, update your config to include variables:
 ```yaml
 # ~/.config/plowman/config.yaml
 estates:
-  ~/dotfiles:
-    granaries:
-      - bash
-      - git
-    variables:
-      username: alice
-      email: alice@example.com
-      editor: nvim
+    ~/dotfiles:
+        granaries:
+            - bash
+            - git
+        variables:
+            username: alice
+            email: alice@example.com
+            editor: nvim
 ```
 
 Create a template file. Rename `.gitconfig` to `.gitconfig.j2` and use variables:
@@ -229,8 +232,8 @@ $ mkdir -p ~/dotfiles/.plowman
 ```yaml
 # ~/dotfiles/.plowman/plowman.yml
 git:
-  templates:
-    - .gitconfig.j2
+    templates:
+        - .gitconfig.j2
 ```
 
 This tells plowman that `.gitconfig.j2` should be processed as a Jinja2 template.
@@ -284,17 +287,18 @@ $ plm sow -vv
 ☑️ Copying /home/user/dotfiles/bash/.bashrc to /home/user/.bashrc
     @@ -1,5 +1,5 @@
      # My bash configuration
-     
+
      # Aliases
     -alias ll='ls -l'
     +alias ll='ls -la'
      alias gs='git status'
-     
+
      # Environment variables
 ☑️ Copying /home/user/dotfiles/git/.gitconfig.j2 to /home/user/.gitconfig
 ```
 
 The diff shows:
+
 - Lines starting with `-` are being removed
 - Lines starting with `+` are being added
 - Context lines show surrounding content
@@ -334,7 +338,7 @@ Update the per-path config to remove the template reference:
 ```yaml
 # ~/dotfiles/.plowman/plowman.yml
 git:
-  templates: []  # No templates now
+    templates: [] # No templates now
 ```
 
 Run plowman:
@@ -367,15 +371,15 @@ Update your main config:
 ```yaml
 # ~/.config/plowman/config.yaml
 estates:
-  ~/dotfiles:
-    granaries:
-      - bash
-      - git
-      - nvim  # Added!
-    variables:
-      username: alice
-      email: alice@example.com
-      editor: nvim
+    ~/dotfiles:
+        granaries:
+            - bash
+            - git
+            - nvim # Added!
+        variables:
+            username: alice
+            email: alice@example.com
+            editor: nvim
 ```
 
 Deploy:
@@ -420,16 +424,16 @@ Update config with OS variable:
 
 ```yaml
 estates:
-  ~/dotfiles:
-    granaries:
-      - bash
-      - git
-      - nvim
-    variables:
-      username: alice
-      email: alice@example.com
-      editor: nvim
-      os: darwin  # Change to "linux" on Linux systems
+    ~/dotfiles:
+        granaries:
+            - bash
+            - git
+            - nvim
+        variables:
+            username: alice
+            email: alice@example.com
+            editor: nvim
+            os: darwin # Change to "linux" on Linux systems
 ```
 
 Mark it as a template:
@@ -437,8 +441,8 @@ Mark it as a template:
 ```yaml
 # ~/dotfiles/.plowman/plowman.yml
 bash:
-  templates:
-    - .bash_profile.j2
+    templates:
+        - .bash_profile.j2
 ```
 
 Deploy:
@@ -473,6 +477,7 @@ fi
 ## Next Steps
 
 Congratulations! You've successfully:
+
 - ✅ Installed plowman
 - ✅ Created a dotfile repository structure
 - ✅ Configured granaries and variables
@@ -490,6 +495,7 @@ Now that you know how to deploy configs with `sow`, learn how to collect changes
 The `harvest` command does the opposite of `sow` - it collects changed files from your home directory back into your granaries.
 
 **When to use harvest:**
+
 - You manually edited a config file in HOME (not through your dotfiles repo)
 - You want to sync changes made on one machine back to your central dotfiles repo
 - You're setting up a new machine and need to collect existing configs
@@ -501,14 +507,14 @@ To use the `-a/--add-to-estate` feature, add names to your granaries:
 ```yaml
 # ~/dotfiles/.plowman/plowman.yml
 bash:
-  name: myshell  # Add this line
-  templates:
-    - .bashrc.j2
+    name: myshell # Add this line
+    templates:
+        - .bashrc.j2
 
 git:
-  name: mygit  # Add this line
-  templates:
-    - .gitconfig.j2
+    name: mygit # Add this line
+    templates:
+        - .gitconfig.j2
 ```
 
 #### Step 17: Make Manual Changes
@@ -591,6 +597,7 @@ $ plm harvest -a myshell::/home/user/.tmux.conf -v
 ```
 
 This:
+
 1. Copies `/home/user/.tmux.conf` to `~/dotfiles/bash/.tmux.conf`
 2. Leaves the estate unchanged until the next `sow`, which discovers and tracks the new granary file
 
@@ -649,9 +656,10 @@ $ plm harvest -v
 ☑️ Harvesting /home/user/.gitconfig to /home/user/dotfiles/git/.gitconfig.j2
 ```
 
-⚠️ **Note:** When harvesting template files, you're copying the *rendered* content back to the template. If the template contains Jinja2 variables, they will be replaced with actual values. Consider editing the `.j2` file directly in your granary instead.
+⚠️ **Note:** When harvesting template files, you're copying the _rendered_ content back to the template. If the template contains Jinja2 variables, they will be replaced with actual values. Consider editing the `.j2` file directly in your granary instead.
 
 Continue learning:
+
 - Read the complete [Usage Guide](./usage/) for all features
 - Explore the [Configuration Reference](./configuration.md) for advanced options
 - Check the [FAQ](./faq.md) for common questions

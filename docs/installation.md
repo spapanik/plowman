@@ -77,6 +77,7 @@ $ pip install .
 ```
 
 This method is useful if you want to:
+
 - Install a specific commit or branch
 - Test unreleased features
 - Contribute to development
@@ -101,6 +102,7 @@ $ pip install -e ".[dev]"
 ```
 
 This installs:
+
 - plowman in editable mode (changes to source code take effect immediately)
 - Testing tools (pytest, pytest-cov)
 - Linting tools (ruff, mypy, ty)
@@ -160,6 +162,7 @@ If your distribution has an older Python, consider using pyenv or installing fro
 ### Windows
 
 plowman is designed for Unix-like systems and manages dotfiles in your home directory. While it may work on Windows with WSL (Windows Subsystem for Linux), it's primarily intended for:
+
 - Linux
 - macOS
 - Other Unix-like systems
@@ -171,22 +174,26 @@ plowman is designed for Unix-like systems and manages dotfiles in your home dire
 If `plm` is not found after installation:
 
 **With uv:**
+
 ```console
 $ which plm
 ```
 
 If not found, ensure uv's bin directory is in your PATH:
+
 ```bash
 # Add to ~/.bashrc or ~/.zshrc
 export PATH="$HOME/.local/bin:$PATH"
 ```
 
 **With pip:**
+
 ```console
 $ which plm
 ```
 
 Check that the Python bin directory is in your PATH:
+
 ```bash
 # For user installations
 export PATH="$HOME/.local/bin:$PATH"
@@ -216,12 +223,14 @@ $ python3 --version
 Ensure you have Python 3.10 or higher. If not:
 
 **Using pyenv:**
+
 ```console
 $ pyenv install 3.14.0
 $ pyenv global 3.14.0
 ```
 
 **Using deadsnakes PPA (Ubuntu):**
+
 ```console
 $ sudo add-apt-repository ppa:deadsnakes/ppa
 $ sudo apt update
@@ -233,6 +242,7 @@ $ sudo apt install python3.14
 If you encounter dependency conflicts:
 
 **Use uv (recommended):**
+
 ```console
 $ uv tool install plowman
 ```
@@ -240,6 +250,7 @@ $ uv tool install plowman
 uv handles dependency isolation automatically.
 
 **Or use a virtual environment:**
+
 ```console
 $ python3.14 -m venv ~/.venvs/plowman
 $ source ~/.venvs/plowman/bin/activate

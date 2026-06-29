@@ -14,7 +14,7 @@
 ## Features
 
 - **Template rendering**: Use Jinja2 templates with custom variables for dynamic configurations
-- **State tracking**: Automatically track which files are managed via estate files  
+- **State tracking**: Automatically track which files are managed via estate files
 - **Smart updates**: Skip unchanged files using SHA256 hashing for efficient deployments
 - **Automatic cleanup**: Remove orphaned files that are no longer in your configuration
 - **Bidirectional sync**: Deploy with `sow`, collect changes back with `harvest`
@@ -34,11 +34,11 @@ Create a basic configuration at `~/.config/plowman/config.yaml`:
 
 ```yaml
 estates:
-  ~/dotfiles:
-    granaries: ["bash", "nvim"]
-    variables:
-      username: myuser
-      hostname: myhost
+    ~/dotfiles:
+        granaries: ["bash", "nvim"]
+        variables:
+            username: myuser
+            hostname: myhost
 ```
 
 Deploy your dotfiles:
@@ -58,7 +58,7 @@ $ plm harvest -v
 plowman uses an agricultural metaphor for managing dotfiles:
 
 - **Granaries**: Source directories containing your dotfile templates and files
-- **Seeds**: Individual source files in granaries (templates or plain files)  
+- **Seeds**: Individual source files in granaries (templates or plain files)
 - **Crops**: Deployed files in your home directory
 - **Estate**: State tracking file that records which crops are managed
 - **Harvest**: Collecting changed crops back to the granary
@@ -68,7 +68,7 @@ This metaphor represents the full lifecycle: planting (deploying with `sow`) con
 ## Next Steps
 
 - [Installation Guide](./installation.md) - How to install plowman
-- [Tutorial](./tutorial.md) - Step-by-step getting started guide  
+- [Tutorial](./tutorial.md) - Step-by-step getting started guide
 - [Usage Guide](./usage/) - Complete usage instructions
 - [Configuration Reference](./configuration.md) - How to configure plowman
 - [Changelog](./CHANGELOG.md) - Release history

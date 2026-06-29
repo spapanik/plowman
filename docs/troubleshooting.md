@@ -16,6 +16,7 @@ command not found: plm
 **Solutions:**
 
 **If installed with uv:**
+
 ```console
 # Check if uv's bin directory is in PATH
 $ which plm
@@ -28,6 +29,7 @@ $ source ~/.bashrc
 ```
 
 **If installed with pip:**
+
 ```console
 # Check Python's bin directory
 $ python3 -m site --user-base
@@ -41,6 +43,7 @@ $ source ~/.venvs/plowman/bin/activate
 ```
 
 **Verify installation:**
+
 ```console
 $ which plm
 /home/user/.local/bin/plm
@@ -61,11 +64,13 @@ PermissionError: [Errno 13] Permission denied: '/usr/lib/python3.10'
 **Solutions:**
 
 **Use --user flag:**
+
 ```console
 $ pip install --user plowman
 ```
 
 **Use virtual environment (recommended):**
+
 ```console
 $ python3 -m venv ~/.venvs/plowman
 $ source ~/.venvs/plowman/bin/activate
@@ -73,6 +78,7 @@ $ pip install plowman
 ```
 
 **Use uv (best option):**
+
 ```console
 $ uv tool install plowman
 ```
@@ -90,6 +96,7 @@ ERROR: Package 'plowman' requires a different Python: 3.9.0 not in '>=3.10'
 **Solutions:**
 
 **Check current Python version:**
+
 ```console
 $ python3 --version
 Python 3.9.0
@@ -98,11 +105,13 @@ Python 3.9.0
 **Install newer Python:**
 
 On macOS with Homebrew:
+
 ```console
 $ brew install python@3.14
 ```
 
 On Ubuntu/Debian:
+
 ```console
 $ sudo add-apt-repository ppa:deadsnakes/ppa
 $ sudo apt update
@@ -110,12 +119,14 @@ $ sudo apt install python3.14
 ```
 
 Using pyenv:
+
 ```console
 $ pyenv install 3.14.0
 $ pyenv global 3.14.0
 ```
 
 **Then reinstall plowman:**
+
 ```console
 $ pip uninstall plowman
 $ pip install plowman
@@ -134,6 +145,7 @@ plowman.lib.exceptions.MissingConfigError: Configuration file not found at ~/.co
 **Solution:**
 
 Create the configuration file:
+
 ```console
 $ mkdir -p ~/.config/plowman
 $ cat > ~/.config/plowman/config.yaml << 'EOF'
@@ -144,6 +156,7 @@ EOF
 ```
 
 Verify it exists:
+
 ```console
 $ ls -la ~/.config/plowman/config.yaml
 -rw-r--r-- 1 user user 50 Jun 24 10:00 /home/user/.config/plowman/config.yaml
@@ -160,35 +173,39 @@ plowman.lib.exceptions.MissingGranaryError: Granary path does not exist: /home/u
 **Solutions:**
 
 **Check the path:**
+
 ```console
 $ ls ~/dotfiles/bash
 ls: cannot access '/home/user/dotfiles/bash': No such file or directory
 ```
 
 **Create the directory:**
+
 ```console
 $ mkdir -p ~/dotfiles/bash
 ```
 
 **Fix typo in config:**
+
 ```yaml
 # Wrong
 estates:
-  ~/dotfiles:
-    granaries: ["bsh"]  # Typo!
+    ~/dotfiles:
+        granaries: ["bsh"] # Typo!
 
 # Correct
 estates:
-  ~/dotfiles:
-    granaries: ["bash"]
+    ~/dotfiles:
+        granaries: ["bash"]
 ```
 
 **Use absolute paths:**
+
 ```yaml
 # Better
 estates:
-  /home/user/dotfiles:
-    granaries: ["bash"]
+    /home/user/dotfiles:
+        granaries: ["bash"]
 ```
 
 ### Invalid YAML Syntax
@@ -202,6 +219,7 @@ yaml.scanner.ScannerError: mapping values are not allowed here
 **Solutions:**
 
 **Validate YAML syntax:**
+
 ```console
 $ python3 -c "import yaml; yaml.safe_load(open('~/.config/plowman/config.yaml'))"
 ```
@@ -209,6 +227,7 @@ $ python3 -c "import yaml; yaml.safe_load(open('~/.config/plowman/config.yaml'))
 **Common issues:**
 
 Tabs instead of spaces:
+
 ```yaml
 # Wrong (uses tabs)
 estates:
@@ -217,22 +236,24 @@ estates:
 
 # Correct (uses spaces)
 estates:
-  ~/dotfiles:
-    granaries: ["bash"]
+    ~/dotfiles:
+        granaries: ["bash"]
 ```
 
 Missing quotes for special characters:
+
 ```yaml
 # Wrong
 variables:
-  email: user@example.com
+    email: user@example.com
 
 # Correct
 variables:
-  email: "user@example.com"
+    email: "user@example.com"
 ```
 
 Incorrect indentation:
+
 ```yaml
 # Wrong
 estates:
@@ -241,8 +262,8 @@ granaries: ["bash"]
 
 # Correct
 estates:
-  ~/dotfiles:
-    granaries: ["bash"]
+    ~/dotfiles:
+        granaries: ["bash"]
 ```
 
 ## Template Issues
@@ -258,15 +279,17 @@ jinja2.exceptions.UndefinedError: 'username' is undefined
 **Solutions:**
 
 **Add variable to config:**
+
 ```yaml
 estates:
-  ~/dotfiles:
-    granaries: ["bash"]
-    variables:
-      username: alice  # Add this
+    ~/dotfiles:
+        granaries: ["bash"]
+        variables:
+            username: alice # Add this
 ```
 
 **Check template syntax:**
+
 ```jinja2
 # Wrong
 {{ usernmae }}  # Typo!
@@ -276,11 +299,13 @@ estates:
 ```
 
 **Use default filter:**
+
 ```jinja2
 {{ username | default("anonymous") }}
 ```
 
 **Debug with verbose mode:**
+
 ```console
 $ plm sow --dry-run -vvv
 ```
@@ -296,6 +321,7 @@ jinja2.exceptions.TemplateSyntaxError: unexpected char '%' at position 10
 **Solutions:**
 
 **Check for typos:**
+
 ```jinja2
 # Wrong
 {% if os == "linux" %
@@ -307,6 +333,7 @@ jinja2.exceptions.TemplateSyntaxError: unexpected char '%' at position 10
 ```
 
 **Balance blocks:**
+
 ```jinja2
 # Wrong
 {% if condition %}
@@ -320,6 +347,7 @@ content
 ```
 
 **Escape literal braces:**
+
 ```jinja2
 # If you need literal {{ in output
 {% raw %}
@@ -334,17 +362,19 @@ content
 **Solutions:**
 
 **Mark file as template:**
+
 ```yaml
 # ~/dotfiles/.plowman/plowman.yml
 bash:
-  templates:
-    - .bashrc.j2  # Must be listed here
+    templates:
+        - .bashrc.j2 # Must be listed here
 ```
 
 **Check file extension:**
 Template files commonly use `.j2` extension, but any extension works as long as it's listed in the templates config.
 
 **Verify template is in correct granary:**
+
 ```console
 $ ls ~/dotfiles/bash/.bashrc.j2
 /home/user/dotfiles/bash/.bashrc.j2
@@ -365,15 +395,17 @@ bash:
 **Solutions:**
 
 **Check granary configuration:**
+
 ```yaml
 estates:
-  ~/dotfiles:
-    granaries:
-      - bash      # Is this listed?
-      - nvim
+    ~/dotfiles:
+        granaries:
+            - bash # Is this listed?
+            - nvim
 ```
 
 **Verify files exist in granary:**
+
 ```console
 $ ls ~/dotfiles/bash/
 .bashrc
@@ -381,6 +413,7 @@ $ ls ~/dotfiles/bash/
 ```
 
 **Run with verbose output:**
+
 ```console
 $ plm sow -v
 ☑️ Copying /home/user/dotfiles/bash/.bashrc to /home/user/.bashrc
@@ -388,6 +421,7 @@ $ plm sow -v
 
 **Check for hash match (file unchanged):**
 If the file hasn't changed since last deployment, plowman skips it. Force re-deployment:
+
 ```console
 $ touch ~/dotfiles/bash/.bashrc
 $ plm sow -v
@@ -402,21 +436,24 @@ $ plm sow -v
 **Solutions:**
 
 **Preview deletions first:**
+
 ```console
 $ plm sow --dry-run -v
 🧹 Would delete /home/user/.old_config
 ```
 
 **Add file back to configuration:**
+
 ```yaml
 estates:
-  ~/dotfiles:
-    granaries:
-      - bash
-      - old_config  # Re-add this
+    ~/dotfiles:
+        granaries:
+            - bash
+            - old_config # Re-add this
 ```
 
 **Reset estate if needed:**
+
 ```console
 $ rm ~/dotfiles/.plowman/estate.yml
 $ plm sow
@@ -433,12 +470,14 @@ PermissionError: [Errno 13] Permission denied: '/home/user/.bashrc'
 **Solutions:**
 
 **Check file permissions:**
+
 ```console
 $ ls -la ~/.bashrc
 -rw------- 1 root root 123 Jun 24 10:00 /home/user/.bashrc
 ```
 
 **Fix ownership:**
+
 ```console
 $ sudo chown $USER:$USER ~/.bashrc
 ```
@@ -459,6 +498,7 @@ yaml.parser.ParserError: while parsing a block mapping
 **Solution:**
 
 Delete and rebuild:
+
 ```console
 $ rm ~/dotfiles/.plowman/estate.yml
 $ plm sow
@@ -471,18 +511,21 @@ This creates a fresh estate file from scratch.
 **Problem:** Estate doesn't match actual deployed files.
 
 **Symptoms:**
+
 - Files being deleted that shouldn't be
 - Files not being cleaned up that should be
 
 **Solution:**
 
 Reset estate:
+
 ```console
 $ rm ~/dotfiles/.plowman/estate.yml
 $ plm sow -v
 ```
 
 Verify all expected files are deployed:
+
 ```console
 $ cat ~/dotfiles/.plowman/estate.yml
 ```
@@ -505,6 +548,7 @@ If granaries are on NFS or similar, file operations are slower.
 plowman already skips unchanged files via SHA256 hashing. Ensure you're not forcing re-deployment unnecessarily.
 
 **Debug slow runs:**
+
 ```console
 $ time plm sow -v
 ```
@@ -532,6 +576,7 @@ $ plm sow -vvv
 ```
 
 This shows:
+
 - All files being processed
 - Full diffs for changes
 - Complete tracebacks on errors
@@ -595,19 +640,19 @@ EOF
 If you're still stuck:
 
 1. **Check the docs:**
-   - [Usage Guide](./usage/)
-   - [Configuration Reference](./configuration.md)
-   - [FAQ](./faq.md)
+    - [Usage Guide](./usage/)
+    - [Configuration Reference](./configuration.md)
+    - [FAQ](./faq.md)
 
 2. **Search existing issues:**
    [GitHub Issues](https://github.com/spapanik/plowman/issues)
 
 3. **Open a new issue:**
    Include:
-   - plowman version: `plm --version`
-   - Error message (full traceback with `-vvv`)
-   - Relevant config snippets
-   - What you expected vs what happened
+    - plowman version: `plm --version`
+    - Error message (full traceback with `-vvv`)
+    - Relevant config snippets
+    - What you expected vs what happened
 
 4. **Community:**
    Check if there's a community forum or chat for plowman users.
