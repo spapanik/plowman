@@ -53,4 +53,12 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: spapanik/plowman
-          files: ./coverage.xml,./junit.xml
+          files: ./coverage.xml
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v7.0.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: spapanik/plowman
+          report_type: test_results
+          files: ./junit.xml

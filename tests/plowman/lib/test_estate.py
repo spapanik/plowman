@@ -24,6 +24,7 @@ def test_estate_build_tree_files_and_dirs(fake_config: list[ParsedConfig]) -> No
     estate = Estate(fake_config)
     paths = [Path("file1.txt"), Path("dir1/file2.txt"), Path("dir1/dir2/file3.txt")]
     tree = estate._build_tree(paths)
+    assert isinstance(tree, list)
     assert "file1.txt" in tree
     assert {"dir1": ["file2.txt", {"dir2": ["file3.txt"]}]} in tree
 
