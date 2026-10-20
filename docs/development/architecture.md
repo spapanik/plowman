@@ -91,13 +91,12 @@ The main entry point for the CLI application.
 
 ```python
 def main() -> None:
-    args = parse_args()                    # Parse CLI args
+    args = parse_args()  # Parse CLI args
     match args.subcommand:
         case "sow":
-            SowCommand(                    # Create command
-                verbosity=args.verbosity,
-                dry_run=args.dry_run
-            ).run()                        # Execute command
+            SowCommand(  # Create command
+                verbosity=args.verbosity, dry_run=args.dry_run
+            ).run()  # Execute command
 ```
 
 ### 2. CLI Parsing (`lib/cli.py`)
@@ -282,12 +281,15 @@ Uses `dj_settings` library for YAML configuration parsing.
 
 ```python
 PlowmanConfig = dict[str, Any]
-ParsedConfig = TypedDict('ParsedConfig', {
-    'estate': Path,
-    'variables': dict[str, str],
-    'granary': Path,
-    'templates': set[Path],
-})
+ParsedConfig = TypedDict(
+    "ParsedConfig",
+    {
+        "estate": Path,
+        "variables": dict[str, str],
+        "granary": Path,
+        "templates": set[Path],
+    },
+)
 ```
 
 ## Data Flow
@@ -404,6 +406,7 @@ class MissingConfigError(Exception):
 ```python
 class MissingGranaryError(Exception):
     """Granary path does not exist"""
+
     def __init__(self, path: Path):
         super().__init__(f"Granary path does not exist: {path}")
 ```

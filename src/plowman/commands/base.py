@@ -19,7 +19,7 @@ class BaseCommand:
 
     def __init__(self) -> None:
         self.config = self._get_config()
-        self.allow_symlinks = ConfigParser([CONFIG_PATH]).data.get(
+        self.allow_symlinks = ConfigParser(CONFIG_PATH).data.get(
             "allow_symlinks", False
         )
 
@@ -29,7 +29,7 @@ class BaseCommand:
         variables = config.get("variables", {})
         path_config = path.joinpath(".plowman", "plowman.yml")
         estate = path.joinpath(".plowman", "estate.yml")
-        data = ConfigParser([path_config]).data if path_config.exists() else {}
+        data = ConfigParser(path_config).data if path_config.exists() else {}
         for granary_name in config.get("granaries", []):
             granary_path = path.joinpath(granary_name)
             if not granary_path.exists() or not granary_path.is_dir():
@@ -50,7 +50,7 @@ class BaseCommand:
     def _get_config(self) -> list[ParsedConfig]:
         if not CONFIG_PATH.exists():
             raise MissingConfigError
-        config_path = ConfigParser([CONFIG_PATH]).data["estates"]
+        config_path = ConfigParser(CONFIG_PATH).data["estates"]
         return [
             estate_config
             for path, config in config_path.items()

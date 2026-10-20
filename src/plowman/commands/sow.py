@@ -36,11 +36,12 @@ class SowCommand(BaseCommand):
         if not path.exists():
             return ""
         if is_template:
-            return Template(
+            template: Template = Template(
                 path.read_text(),
                 undefined=StrictUndefined,
                 keep_trailing_newline=True,
-            ).render(**variables)
+            )
+            return template.render(**variables)
         return path.read_text()
 
     def _get_content_hash(

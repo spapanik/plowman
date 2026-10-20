@@ -68,7 +68,7 @@ class Estate:
     def _parse_estate(self, estate: Path) -> Iterator[Path]:
         if not estate.exists():
             return
-        yield from self._extract_paths(ConfigParser([estate]).data["files"])
+        yield from self._extract_paths(ConfigParser(estate).data["files"])
 
     def get_state(self) -> dict[Path, Path]:
         return {
